@@ -1,0 +1,66 @@
+.container {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.header {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  z-index: 1000;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.headerLeft img {
+  width: 28px;
+  height: 28px;
+}
+
+.title {
+  font-size: 16px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.topRight {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  transition: right 0.3s ease-out;
+}
+
+.topRight.shifted {
+  right: 420px;
+}
+
+.topicsList {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: 300px;
+  z-index: 1000;
+}
+
+.mapContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
