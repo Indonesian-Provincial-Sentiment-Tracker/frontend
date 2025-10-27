@@ -1,27 +1,18 @@
 import { useMemo } from 'react';
-import { useSentimentData } from '../../hooks/useSentimentData';
 import styles from './DateDisplay.module.css';
 
-export default function DateDisplay() {
-  const data = useSentimentData();
-
+export default function DateDisplay({ datas }: { datas: any }) {
   const formattedDate = useMemo(() => {
-    const dateString = data?.date;
+    const dateString = datas?.date;
     if (!dateString) return 'N/A';
-
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return 'N/A';
-
-      return date.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      });
-    } catch {
-      return 'N/A';
-    }
-  }, [data?.date]);
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'N/A';
+    return date.toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  }, [datas?.date]);
 
   return (
     <div className={styles.container}>

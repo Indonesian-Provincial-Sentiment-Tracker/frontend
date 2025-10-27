@@ -10,6 +10,7 @@ export function normalizeProvinceName(props: FeatureProps): string {
       break;
     }
   }
+
   if (!raw) {
     const firstString = Object.values(props || {}).find((v) => typeof v === 'string') as
       | string
@@ -49,4 +50,12 @@ export function colorForSentimentId(sentimentId?: number): string {
     default:
       return '#cccccc';
   }
+}
+
+export function normalizeInitProvinceName(
+  props: Record<string, unknown> | null | undefined
+): string | null {
+  if (!props) return null;
+  const name = props.NAME_1 || props.name || props.Provinsi || props.PROVINSI;
+  return name ? String(name).trim().toUpperCase() : null;
 }

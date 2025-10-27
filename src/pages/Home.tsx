@@ -12,13 +12,45 @@ import styles from './Home.module.css';
 
 export default function Home() {
   const [clicked, setClicked] = useState<ClickInfo | null>(null);
-  const sentimentData = useSentimentData();
+  const { data, loading, error } = useSentimentData();
 
   useEffect(() => {
-    if (sentimentData?.stateData) {
-      initializeProvinceMap(sentimentData.stateData);
+    if (data?.stateData) {
+      initializeProvinceMap(data.stateData);
     }
-  }, [sentimentData]);
+  }, [data]);
+
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div className={styles.headerLeft}>
+            <img src={Icon} alt="icon" />
+            <h1 className={styles.title}>Indonesia Sentiment Map</h1>
+          </div>
+        </div>
+        <div className={styles.loadingState}>
+          <p>Loading sentiment data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div className={styles.headerLeft}>
+            <img src={Icon} alt="icon" />
+            <h1 className={styles.title}>Indonesia Sentiment Map</h1>
+          </div>
+        </div>
+        <div className={styles.errorState}>
+          <p>Error loading data: {error.message}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -30,12 +62,12 @@ export default function Home() {
       </div>
 
       <div className={`${styles.topRight} ${clicked ? styles.shifted : ''}`}>
-        <DateDisplay />
-        <SentimentStats />
+        <DateDisplay datas={data} />
+        <SentimentStats datas={data} />
       </div>
 
       <div className={styles.topicsList}>
-        <TopicsList />
+        <TopicsList datas={data} />
       </div>
 
       <div className={styles.mapContainer}>

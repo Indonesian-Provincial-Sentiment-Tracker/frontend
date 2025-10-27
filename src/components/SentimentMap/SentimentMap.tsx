@@ -5,7 +5,7 @@ import L, { LeafletMouseEvent, Layer } from 'leaflet';
 import type { Feature, GeoJsonProperties, Geometry } from 'geojson';
 import { useGeoJSON } from '../../hooks/useGeoJSON';
 import { normalizeProvinceName, colorForSentimentId } from '../../utils/geo';
-import { getProvinceData } from '../../utils/sentiment';
+import { getProvinceDataById } from '../../utils/sentiment';
 import type { ClickInfo } from '../../types/sentiment';
 import styles from './SentimentMap.module.css';
 
@@ -24,8 +24,8 @@ export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
   } | null>(null);
 
   const styleFn = useCallback((feature?: Feature<Geometry, GeoJsonProperties>) => {
-    const name = normalizeProvinceName(feature?.properties || {});
-    const provinceData = getProvinceData(name);
+    const stateId = feature?.properties?.state_id;
+    const provinceData = stateId ? getProvinceDataById(stateId) : undefined;
 
     return {
       color: '#ffffff',
@@ -38,12 +38,11 @@ export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
   const onEachFeature = useCallback(
     (feature: Feature, layer: Layer) => {
       layer.on('click', () => {
-        const name = normalizeProvinceName(feature?.properties || {});
-        const provinceData = getProvinceData(name);
+        const stateId = feature?.properties?.state_id;
 
-        if (provinceData?.state_id) {
+        if (stateId) {
           onProvinceClick({
-            stateId: provinceData.state_id,
+            stateId: stateId,
           });
         }
       });
@@ -51,7 +50,8 @@ export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
       layer.on('mouseover', (e: LeafletMouseEvent) => {
         (layer as L.Path).setStyle({ weight: 2 });
         const name = normalizeProvinceName(feature?.properties || {});
-        const provinceData = getProvinceData(name);
+        const stateId = feature?.properties?.state_id;
+        const provinceData = stateId ? getProvinceDataById(stateId) : undefined;
         setHoverInfo({
           name,
           score: provinceData?.most_sentiment_percentage,

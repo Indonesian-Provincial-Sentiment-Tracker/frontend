@@ -106,6 +106,7 @@ npm run preview
 ```
 frontend/
 ├─ public/
+│  ├─ dummy.json                     # Data dummy untuk development
 │  └─ indonesia-provinsi.json        # GeoJSON batas provinsi Indonesia
 ├─ src/
 │  ├─ assets/
@@ -130,8 +131,8 @@ frontend/
 │  │     └─ Card/
 │  │        ├─ Card.tsx              # Komponen Card reusable
 │  │        └─ Card.module.css
-│  ├─ data/
-│  │  └─ dummy.json                  # Data dummy untuk development
+│  ├─ constants/
+│  │  └─ sentiment.ts                # Konstanta data sentimen
 │  ├─ hooks/
 │  │  ├─ useGeoJSON.ts               # Hook memuat data GeoJSON
 │  │  └─ useSentimentData.ts         # Hook memuat data sentimen
@@ -139,7 +140,8 @@ frontend/
 │  │  ├─ Home.tsx                    # Halaman utama aplikasi
 │  │  └─ Home.module.css
 │  ├─ services/
-│  │  └─ geojsonService.ts           # Service pemuatan GeoJSON + fallback remote
+│  │  ├─ geojsonService.ts           # Service pemuatan GeoJSON + fallback remote
+│  │  └─ sentimentDataService.ts     # Service pemuatan data sentimen
 │  ├─ types/
 │  │  ├─ css.d.ts                    # Type definition untuk CSS modules
 │  │  └─ sentiment.ts                # Type definition untuk data sentimen

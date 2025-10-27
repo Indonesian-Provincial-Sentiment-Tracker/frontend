@@ -1,15 +1,7 @@
-import { useMemo } from 'react';
-import { useSentimentData } from '../../hooks/useSentimentData';
 import styles from './TopicsList.module.css';
 
-export default function TopicsList() {
-  const data = useSentimentData();
-
-  const topics = useMemo(() => {
-    return data?.topics || [];
-  }, [data?.topics]);
-
-  if (!data || topics.length === 0) {
+export default function TopicsList({ datas }: { datas: any }) {
+  if (!datas || datas.topics.length === 0) {
     return (
       <div className={styles.container}>
         <h3 className={styles.title}>Trending Topics</h3>
@@ -22,7 +14,7 @@ export default function TopicsList() {
     <div className={styles.container}>
       <h3 className={styles.title}>Trending Topics</h3>
       <div className={styles.topicsList}>
-        {topics.map((topic, index) => (
+        {datas.topics.map((topic, index) => (
           <div key={index} className={styles.topicItem}>
             <div className={styles.topicName}>{topic?.topic || 'N/A'}</div>
             <div className={styles.keywords}>

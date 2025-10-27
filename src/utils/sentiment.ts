@@ -10,12 +10,10 @@ export function initializeProvinceMap(stateData: StateData[] | null | undefined)
   }
 
   stateData.forEach((state) => {
-    const normalizedName = state.state_name.trim().toUpperCase();
-    PROVINCE_SENTIMENT_MAP[normalizedName] = state;
+    PROVINCE_SENTIMENT_MAP[state.state_id] = state;
   });
 }
 
-export function getProvinceData(provinceName: string): StateData | undefined {
-  const normalized = provinceName.trim().toUpperCase();
-  return PROVINCE_SENTIMENT_MAP[normalized];
+export function getProvinceDataById(stateId: string): StateData | undefined {
+  return PROVINCE_SENTIMENT_MAP[stateId];
 }

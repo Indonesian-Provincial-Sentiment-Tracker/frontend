@@ -1,36 +1,35 @@
-import { useMemo } from 'react';
-import dummyData from '../data/dummy.json';
-import type { StateData } from '../types/sentiment';
+import { useState, useEffect } from 'react';
+import { fetchSentimentData } from '../services/sentimentDataService';
+import type { StateData, Topic, Sentiments } from '../types/sentiment';
 
 export interface SentimentData {
   date: string;
   stateData: StateData[];
-  topics: Array<{
-    topic: string;
-    keywords: string[];
-  }>;
-  sentiments: {
-    positive_score: number;
-    neutral_score: number;
-    negative_score: number;
-    positive_percentage: number;
-    neutral_percentage: number;
-    negative_percentage: number;
-  };
+  topics: Topic[];
+  sentiments: Sentiments;
 }
 
 export function useSentimentData() {
-  const data = useMemo<SentimentData | null>(() => {
+  const [data, setData] = useState<SentimentData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  async function loadData() {
     try {
-      if (!dummyData?.data) {
-        return null;
+      setLoading(true);
+      const response = await fetchSentimentData();
+
+      if (!response || !response.data) {
+        setError(new Error('Failed to fetch sentiment data'));
+        setData(null);
+        return;
       }
 
-      return {
-        date: dummyData.data.date || '',
-        stateData: dummyData.data.state_data || [],
-        topics: dummyData.data.topics || [],
-        sentiments: dummyData.data.sentiments || {
+      setData({
+        date: response.data.date || '',
+        stateData: response.data.state_data || [],
+        topics: response.data.topics || [],
+        sentiments: response.data.sentiments || {
           positive_score: 0,
           neutral_score: 0,
           negative_score: 0,
@@ -38,11 +37,19 @@ export function useSentimentData() {
           neutral_percentage: 0,
           negative_percentage: 0,
         },
-      };
-    } catch {
-      return null;
+      });
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Unknown error'));
+      setData(null);
+    } finally {
+      setLoading(false);
     }
+  }
+
+  useEffect(() => {
+    loadData();
   }, []);
 
-  return data;
+  return { data, loading, error };
 }

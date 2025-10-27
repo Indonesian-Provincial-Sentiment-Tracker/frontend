@@ -1,6 +1,4 @@
-/* eslint-disable no-undef */
 import { IoClose } from 'react-icons/io5';
-import { useEffect } from 'react';
 import type { ClickInfo } from '../../types/sentiment';
 import styles from './Sidebar.module.css';
 
@@ -10,12 +8,6 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ clicked, onClose }: SidebarProps) {
-  useEffect(() => {
-    if (clicked?.stateId) {
-      console.log('State ID:', clicked.stateId);
-    }
-  }, [clicked?.stateId]);
-
   if (!clicked) return null;
 
   return (
