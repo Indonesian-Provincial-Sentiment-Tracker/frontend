@@ -51,11 +51,3 @@ export function colorForSentimentId(sentimentId?: number): string {
       return '#cccccc';
   }
 }
-
-export function normalizeInitProvinceName(
-  props: Record<string, unknown> | null | undefined
-): string | null {
-  if (!props) return null;
-  const name = props.NAME_1 || props.name || props.Provinsi || props.PROVINSI;
-  return name ? String(name).trim().toUpperCase() : null;
-}
