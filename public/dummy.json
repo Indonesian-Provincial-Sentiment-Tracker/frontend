@@ -1,0 +1,254 @@
+{
+  "data": {
+    "date": "2025-10-25",
+    "state_data": [
+      {
+        "state_id": "068c536a-5a4f-784e-a0e9-1be126f29a62",
+        "state_name": "Kalimantan Tengah",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 76
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-9425-d93d4796eb21",
+        "state_name": "Sumatera Utara",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 66
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-b63f-064385b2b985",
+        "state_name": "Papua Pegunungan",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 54
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-b357-6492531ec590",
+        "state_name": "Papua Barat",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 60
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-a5e3-96da53c59d8e",
+        "state_name": "Jawa Tengah",
+        "most_sentiment_id": 3,
+        "most_sentiment_percentage": 46.94
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-a1af-d00c93d739ec",
+        "state_name": "Kalimantan Utara",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 79.59
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-add5-8edc4d3e9e90",
+        "state_name": "Sulawesi Tengah",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 44.9
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-aae4-9738dd808d0d",
+        "state_name": "Nusa Tenggara Barat",
+        "most_sentiment_id": 3,
+        "most_sentiment_percentage": 64
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-a4c4-3b61da5c754f",
+        "state_name": "Jawa Barat",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 68
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-9a84-17eac0f01575",
+        "state_name": "Jambi",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 64
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-b710-ed478d82052b",
+        "state_name": "Papua Selatan",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 53.06
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-b19b-842a9f5ce226",
+        "state_name": "Maluku Utara",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 74
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-961d-1853b09bd6ea",
+        "state_name": "Sumatera Barat",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 58
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-a8ec-daf0a412f4fd",
+        "state_name": "Bali",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 60
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-9e49-7d37a1268be6",
+        "state_name": "Kalimantan Timur",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 85.71
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-9995-d1a20405eaa4",
+        "state_name": "Kepulauan Riau",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 67.35
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-b449-a9b76db2843e",
+        "state_name": "Papua",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 58
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-a992-359c9901098e",
+        "state_name": "Nusa Tenggara Timur",
+        "most_sentiment_id": 3,
+        "most_sentiment_percentage": 52
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-b58c-01e8eec6c4fc",
+        "state_name": "Papua Tengah",
+        "most_sentiment_id": 3,
+        "most_sentiment_percentage": 46.81
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-a62b-ebccebc4dba1",
+        "state_name": "Yogyakarta",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 54
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-a397-efdcca7a74d6",
+        "state_name": "Jakarta",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 62
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-b843-3e8715034b1e",
+        "state_name": "Papua Barat Daya",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 44
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-af56-26b93956a866",
+        "state_name": "Sulawesi Tenggara",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 58
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-9bea-10fbec53dc21",
+        "state_name": "Lampung",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 55.32
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-aee2-2005ff3a2273",
+        "state_name": "Sulawesi Utara",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 66
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-97a4-6cbf01228da2",
+        "state_name": "Bengkulu",
+        "most_sentiment_id": 3,
+        "most_sentiment_percentage": 58
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-ab76-8c01d62cdfdd",
+        "state_name": "Gorontalo",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 50
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-9d4d-1db43a4fd815",
+        "state_name": "Kalimantan Barat",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 74
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-b293-e643ff505c1d",
+        "state_name": "Maluku",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 52
+      },
+      {
+        "state_id": "068c536a-5a4b-7616-b05c-7a56ebe78bab",
+        "state_name": "Aceh",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 62
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-b062-5c105cfca9ef",
+        "state_name": "Sulawesi Selatan",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 48.98
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-95f0-ecdbbfb6c44c",
+        "state_name": "Sumatera Selatan",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 58
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-9fc7-1425fcbe111d",
+        "state_name": "Kalimantan Selatan",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 72.92
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-9c7b-cb1bd31e6dee",
+        "state_name": "Kepulauan Bangka Belitung",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 56
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-acca-428c0b6f83c8",
+        "state_name": "Sulawesi Barat",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 44
+      },
+      {
+        "state_id": "068c536a-5a4f-784e-98dc-5a0e7b2a7053",
+        "state_name": "Riau",
+        "most_sentiment_id": 2,
+        "most_sentiment_percentage": 61.22
+      }
+    ],
+    "topics": [
+      {
+        "topic": "Isu Jakarta dan Indonesia",
+        "keywords": ["jakarta", "tanah", "indonesia", "warga", "jumat"]
+      },
+      {
+        "topic": "Ekonomi dan Politik Nasional",
+        "keywords": ["jalan", "presiden", "ekonomi", "kuat", "politik"]
+      },
+      {
+        "topic": "Isu Provinsi dan Masyarakat Riau",
+        "keywords": ["provinsi", "masyarakat", "kepala", "riau", "kota"]
+      },
+      {
+        "topic": "Opini dan Kepemimpinan Daerah",
+        "keywords": ["yang", "gubernur", "enggak", "tapi", "ketua"]
+      },
+      {
+        "topic": "Pemerintahan dan Rakyat di Kalimantan",
+        "keywords": ["amp", "rakyat", "daerah", "kalimantan", "perintah"]
+      }
+    ],
+    "sentiments": {
+      "positive_score": 0.81,
+      "neutral_score": 0.94,
+      "negative_score": 0.93,
+      "positive_percentage": 10.76,
+      "neutral_percentage": 57.74,
+      "negative_percentage": 31.5
+    }
+  },
+  "error": false
+}

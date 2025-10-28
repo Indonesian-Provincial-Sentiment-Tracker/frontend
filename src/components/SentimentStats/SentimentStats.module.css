@@ -1,0 +1,46 @@
+.container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  display: flex;
+  gap: 20px;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+}
+
+.valueGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  margin: auto;
+}
+
+.score {
+  font-size: 10px;
+  font-weight: 500;
+  color: #888;
+}
+
+.noData {
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+}

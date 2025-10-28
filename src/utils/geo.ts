@@ -10,22 +10,44 @@ export function normalizeProvinceName(props: FeatureProps): string {
       break;
     }
   }
+
   if (!raw) {
-    const firstString = Object.values(props || {}).find(v => typeof v === 'string') as string | undefined;
+    const firstString = Object.values(props || {}).find((v) => typeof v === 'string') as
+      | string
+      | undefined;
     raw = firstString || 'UNKNOWN';
   }
   const upper = raw.trim().toUpperCase().replace(/\s+/g, ' ');
-  if (upper.includes('DAERAH KHUSUS IBUKOTA')) return 'DKI JAKARTA';
-  if (upper === 'D.K.I. JAKARTA' || upper === 'DKI') return 'DKI JAKARTA';
-  if (upper.includes('DAERAH ISTIMEWA YOGYAKARTA') || upper === 'YOGYAKARTA') return 'DI YOGYAKARTA';
-  if (upper.includes('BANGKA') && upper.includes('BELITUNG')) return 'KEPULAUAN BANGKA BELITUNG';
+
+  if (
+    upper.includes('DAERAH KHUSUS IBUKOTA') ||
+    upper === 'D.K.I. JAKARTA' ||
+    upper === 'DKI JAKARTA' ||
+    upper === 'DKI'
+  ) {
+    return 'JAKARTA';
+  }
+  if (upper.includes('DAERAH ISTIMEWA YOGYAKARTA') || upper === 'DI YOGYAKARTA') {
+    return 'YOGYAKARTA';
+  }
+  if (upper.includes('BANGKA') && upper.includes('BELITUNG')) {
+    return 'KEPULAUAN BANGKA BELITUNG';
+  }
+
   return upper;
 }
 
-export function colorForPercentage(score?: number): string {
-  if (score == null || Number.isNaN(score)) return '#cccccc';
-  const s = Math.max(0, Math.min(100, score));
-  if (s > 75) return '#43a047';
-  if (s > 50) return '#fdd835';
-  return '#e53935';
+export function colorForSentimentId(sentimentId?: number): string {
+  if (sentimentId == null) return '#cccccc';
+
+  switch (sentimentId) {
+    case 1:
+      return '#43a047';
+    case 2:
+      return '#fdd835';
+    case 3:
+      return '#e53935';
+    default:
+      return '#cccccc';
+  }
 }
