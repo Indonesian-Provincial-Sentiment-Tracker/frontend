@@ -1,21 +1,127 @@
+.wrapper {
+  position: relative;
+}
+
 .container {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 8px;
-  padding: 8px 14px;
+  padding: 8px 12px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .label {
-  font-size: 11px;
+  font-size: 12px;
   color: #666;
 }
 
 .date {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: #333;
+}
+
+.dropdownTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.dropdownTrigger:hover {
+  background: #f8fafc;
+}
+
+.chevron {
+  width: 14px;
+  height: 14px;
+  opacity: 0.7;
+}
+
+.dropdownPanel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  width: 620px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 10px;
+}
+
+.presetRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.presetLabel {
+  font-size: 12px;
+  color: #444;
+}
+
+.presetSelect {
+  appearance: none;
+  padding: 6px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 12px;
+}
+
+.calendarContainer {
+  padding: 6px;
+}
+
+.footerRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.secondaryButton {
+  padding: 6px 10px;
+  font-size: 12px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.primaryButton {
+  padding: 6px 10px;
+  font-size: 12px;
+  color: #fff;
+  background: #2563eb;
+  border: 1px solid #2563eb;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* react-day-picker overrides to resemble the screenshot */
+:global(.rdp) {
+  --rdp-accent-color: #111827;
+  --rdp-outline: 0;
+}
+
+:global(.rdp-range_start .rdp-day_button),
+:global(.rdp-range_end .rdp-day_button) {
+  background: #111827 !important;
+  color: #fff !important;
+  border-radius: 6px !important;
+}
+
+:global(.rdp-day_range) {
+  background: #e5e7eb !important;
 }
