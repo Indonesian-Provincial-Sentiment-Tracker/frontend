@@ -1,0 +1,25 @@
+.tooltipWrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.tooltipIcon {
+  width: 8x;
+  height: 8px;
+  color: #888;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: -55px;
+  right: 0px;
+  transform: translateX(0) -translateY(55px);
+  background: black;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 1000;
+}
