@@ -1,21 +1,19 @@
+/* eslint-disable no-unused-vars */
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import { useCallback, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import L, { LeafletMouseEvent, Layer } from 'leaflet';
 import type { Feature, GeoJsonProperties, Geometry } from 'geojson';
-import type { GeoJSON as GeoJSONType } from 'geojson';
 import { normalizeProvinceName, colorForSentimentId } from '../utils/geo';
 import { getProvinceDataById } from '../utils/sentiment';
 import { loadProvincesGeoJSON } from '../services/geojsonService';
-import type { ClickInfo } from '../types/sentiment';
 
 interface SentimentMapProps {
-  // eslint-disable-next-line no-unused-vars
-  onProvinceClick: (info: ClickInfo) => void;
+  onProvinceClick: (stateId: string) => void;
 }
 
 export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
-  const { data, isLoading, error } = useQuery<GeoJSONType | null, Error>({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['geoJSON'],
     queryFn: loadProvincesGeoJSON,
     staleTime: 1000 * 60 * 60,
@@ -48,9 +46,7 @@ export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
         const stateId = feature?.properties?.state_id;
 
         if (stateId) {
-          onProvinceClick({
-            stateId: stateId,
-          });
+          onProvinceClick(stateId);
         }
       });
 

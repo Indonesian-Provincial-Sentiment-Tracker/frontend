@@ -1,7 +1,3 @@
-export interface ClickInfo {
-  stateId: string;
-}
-
 export interface StateData {
   state_id: string;
   state_name: string;
@@ -23,11 +19,25 @@ export interface Sentiments {
   negative_percentage: number;
 }
 
-export interface SentimentData {
-  date: string;
+export type DateInfo =
+  | { date: string }
+  | { from_date: string; to_date: string }
+  | { month: string; year: string };
+
+export type SentimentData = DateInfo & {
   state_data: StateData[];
   topics: Topic[];
   sentiments: Sentiments;
+};
+
+export type StateDetailData = DateInfo & {
+  state_id: string;
+  sentiments: Sentiments;
+  topics: Topic[];
+};
+
+export interface ClickInfo {
+  stateId: string;
 }
 
 export interface SentimentResponse {
@@ -35,6 +45,28 @@ export interface SentimentResponse {
   error: boolean;
 }
 
-export interface DateInfo {
-  date: string | null;
+export interface Tweet {
+  tweet_id: string;
+  date: string;
+  state_id: string;
+  tweet: string;
+  username: string;
+  tweet_url: string;
+  sentiment_id: number;
+  sentiment_score: number;
+}
+
+export type TweetsData = DateInfo & {
+  state_id: string;
+  tweets: Tweet[];
+};
+
+export interface TweetsResponse {
+  current_page: number;
+  data: TweetsData;
+  error: boolean;
+  has_next: boolean;
+  message: string;
+  total: number;
+  total_page: number;
 }

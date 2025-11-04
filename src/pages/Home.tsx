@@ -2,20 +2,22 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
 import { SentimentMap, SentimentStats, TopicsList, DateDisplay, Sidebar } from '../components';
-import type { ClickInfo } from '../types/sentiment';
 import Icon from '../assets/icon.svg';
 import { initializeProvinceMap } from '../utils/sentiment';
 
-async function fetchSentimentData() {
-  const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/home`);
+async function fetchSentimentData(filter?: 'latest' | 'daily' | 'weekly' | 'monthly') {
+  const base = `${import.meta.env.VITE_API_BASE_URL}`;
+  const path = !filter || filter === 'latest' ? '/home' : `/home/${filter}`;
+  const response = await axios.get(`${base}${path}`);
   return response.data.data;
 }
 
 export default function Home() {
-  const [clicked, setClicked] = useState<ClickInfo | null>(null);
+  const [clicked, setClicked] = useState<string | null>(null);
+  const [filter, setFilter] = useState<'latest' | 'daily' | 'weekly' | 'monthly'>('latest');
   const { data, isLoading, error } = useQuery({
-    queryKey: ['sentimentData'],
-    queryFn: fetchSentimentData,
+    queryKey: ['sentimentData', filter],
+    queryFn: () => fetchSentimentData(filter),
   });
 
   if (isLoading) {
@@ -64,7 +66,22 @@ export default function Home() {
       <div
         className={`absolute top-5 right-5 z-800 flex flex-col items-end gap-2.5 transition-[right] duration-300 ease-out ${clicked ? 'right-[420px]' : ''}`}
       >
-        <DateDisplay date={data?.date || null} />
+        <div className="flex items-center gap-3">
+          <DateDisplay datas={data || null} />
+          <div className="flex items-center gap-1 bg-white/90 px-4.5 py-1 rounded-md shadow-sm">
+            {(['latest', 'daily', 'weekly', 'monthly'] as const).map((filt) => (
+              <button
+                key={filt}
+                onClick={() => setFilter(filt)}
+                className={`text-xs cursor-pointer px-2 py-1 rounded-md transition-colors duration-150 ${
+                  filter === filt ? 'bg-[#F05454] text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                {filt === 'latest' ? 'Latest' : filt.charAt(0).toUpperCase() + filt.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
         <SentimentStats datas={data || null} />
       </div>
 
@@ -76,7 +93,7 @@ export default function Home() {
         <SentimentMap onProvinceClick={setClicked} />
       </div>
 
-      <Sidebar clicked={clicked} onClose={() => setClicked(null)} />
+      <Sidebar clicked={clicked} onClose={() => setClicked(null)} filterDefault={filter} />
     </div>
   );
 }

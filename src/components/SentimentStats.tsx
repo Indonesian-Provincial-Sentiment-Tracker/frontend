@@ -1,6 +1,7 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import Tooltip from './Tooltip';
 import { SentimentData } from '../types/sentiment';
+import { formatPercentage, formatScore } from '../utils/sentimentPercentage';
 
 export default function SentimentStats({ datas }: { datas: SentimentData | null }) {
   const [showTooltip, setShowTooltip] = useState({
@@ -8,16 +9,6 @@ export default function SentimentStats({ datas }: { datas: SentimentData | null 
     neutral: false,
     negative: false,
   });
-
-  const formatPercentage = useCallback((value: number | null | undefined) => {
-    if (value == null || isNaN(value)) return 'N/A';
-    return `${value.toFixed(1)}%`;
-  }, []);
-
-  const formatScore = useCallback((value: number | null | undefined) => {
-    if (value == null || isNaN(value)) return 'N/A';
-    return value.toFixed(2);
-  }, []);
 
   if (!datas || !datas.sentiments) {
     return (

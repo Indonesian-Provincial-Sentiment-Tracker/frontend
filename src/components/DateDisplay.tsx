@@ -1,17 +1,13 @@
 import { useMemo } from 'react';
-import { DateInfo } from '../types/sentiment';
+import type { SentimentData } from '../types/sentiment';
+import { formatDateDisplay } from '../utils/date';
 
-export default function DateDisplay({ date }: DateInfo) {
-  const formattedDate = useMemo(() => {
-    if (!date) return 'N/A';
-    const dateManipulate = new Date(date);
-    if (isNaN(dateManipulate.getTime())) return 'N/A';
-    return dateManipulate.toLocaleDateString('id-ID', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
-  }, [date]);
+interface DateDisplayProps {
+  datas: SentimentData | null;
+}
+
+export default function DateDisplay({ datas }: DateDisplayProps) {
+  const formattedDate = useMemo(() => formatDateDisplay(datas), [datas]);
 
   return (
     <div className="bg-white/95 rounded-lg px-3.5 py-2 shadow-sm backdrop-blur-[10px] flex items-center gap-1.5">
