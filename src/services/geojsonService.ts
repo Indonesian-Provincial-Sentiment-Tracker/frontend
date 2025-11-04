@@ -1,3 +1,4 @@
+import axios from 'axios';
 import type { GeoJSON as GeoJSONType, Feature } from 'geojson';
 import { PROVINCE_TO_STATE_ID } from '../constants/sentiment';
 import { normalizeProvinceName } from '../utils/geo';
@@ -21,7 +22,7 @@ function addStateId(gj: GeoJSONType): GeoJSONType {
   if (gj.type !== 'FeatureCollection') return gj;
 
   const enrichedFeatures = gj.features.map((feature: Feature) => {
-    const provinceName = normalizeProvinceName(feature.properties);
+    const provinceName = normalizeProvinceName(feature.properties || {});
     const stateId = provinceName ? PROVINCE_TO_STATE_ID[provinceName] : undefined;
 
     return {
@@ -41,9 +42,10 @@ function addStateId(gj: GeoJSONType): GeoJSONType {
 
 async function tryLoad(url: string): Promise<GeoJSONType | null> {
   try {
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) return null;
-    const gj = await res.json();
+    const response = await axios.get(url, {
+      headers: { 'Cache-Control': 'no-cache' },
+    });
+    const gj = response.data;
     const ok = Array.isArray(gj?.features) && gj.features.length > 0 && hasUsableNames(gj);
     return ok ? addStateId(gj as GeoJSONType) : null;
   } catch {

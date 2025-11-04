@@ -1,20 +1,27 @@
-/* eslint-disable no-unused-vars */
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import { useCallback, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import L, { LeafletMouseEvent, Layer } from 'leaflet';
 import type { Feature, GeoJsonProperties, Geometry } from 'geojson';
-import { useGeoJSON } from '../../hooks/useGeoJSON';
-import { normalizeProvinceName, colorForSentimentId } from '../../utils/geo';
-import { getProvinceDataById } from '../../utils/sentiment';
-import type { ClickInfo } from '../../types/sentiment';
-import styles from './SentimentMap.module.css';
+import type { GeoJSON as GeoJSONType } from 'geojson';
+import { normalizeProvinceName, colorForSentimentId } from '../utils/geo';
+import { getProvinceDataById } from '../utils/sentiment';
+import { loadProvincesGeoJSON } from '../services/geojsonService';
+import type { ClickInfo } from '../types/sentiment';
 
 interface SentimentMapProps {
+  // eslint-disable-next-line no-unused-vars
   onProvinceClick: (info: ClickInfo) => void;
 }
 
 export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
-  const { data, loading, error } = useGeoJSON();
+  const { data, isLoading, error } = useQuery<GeoJSONType | null, Error>({
+    queryKey: ['geoJSON'],
+    queryFn: loadProvincesGeoJSON,
+    staleTime: 1000 * 60 * 60,
+    retry: 1,
+  });
+
   const [hoverInfo, setHoverInfo] = useState<{
     name: string;
     score?: number;
@@ -82,36 +89,42 @@ export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
 
   const center = useMemo(() => ({ lat: -2.5, lng: 118 }), []);
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <div className={styles.container}>
-        <div className={styles.loadingState}>Memuat peta...</div>
+      <div className="w-full h-full">
+        <div className="flex items-center justify-center w-full h-full min-h-[400px] text-sm text-blue-600 bg-white/95 rounded-lg">
+          Memuat peta...
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className={styles.container}>
-        <div className={styles.errorState}>Gagal memuat data peta. Silakan refresh halaman.</div>
+      <div className="w-full h-full">
+        <div className="flex items-center justify-center w-full h-full min-h-[400px] text-sm text-red-600 bg-white/95 rounded-lg">
+          Gagal memuat data peta. Silakan refresh halaman.
+        </div>
       </div>
     );
   }
 
   if (!data) {
     return (
-      <div className={styles.container}>
-        <div className={styles.noDataState}>Tidak ada data peta tersedia</div>
+      <div className="w-full h-full">
+        <div className="flex items-center justify-center w-full h-full min-h-[400px] text-sm text-gray-600 bg-white/95 rounded-lg">
+          Tidak ada data peta tersedia
+        </div>
       </div>
     );
   }
 
   return (
-    <div className={styles.container}>
+    <div className="w-full h-full">
       <MapContainer
         center={center}
         zoom={5}
-        className={styles.container}
+        className="w-full h-full"
         scrollWheelZoom={false}
         dragging={false}
         zoomControl={false}
@@ -128,7 +141,7 @@ export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
       </MapContainer>
       {hoverInfo && (
         <div
-          className={styles.tooltip}
+          className="fixed bg-white/95 border border-gray-200 rounded-lg shadow-md px-3 py-2 z-850 text-[13px] pointer-events-none min-w-[150px]"
           style={{
             left: `${hoverInfo.x + 10}px`,
             top: `${hoverInfo.y + 10}px`,

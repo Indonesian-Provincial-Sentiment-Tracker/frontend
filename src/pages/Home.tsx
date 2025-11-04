@@ -1,36 +1,34 @@
-import { useState, useEffect } from 'react';
-import SentimentMap from '../components/SentimentMap/SentimentMap';
-import SentimentStats from '../components/SentimentStats/SentimentStats';
-import TopicsList from '../components/TopicsList/TopicsList';
-import DateDisplay from '../components/DateDisplay/DateDisplay';
-import Sidebar from '../components/Sidebar/Sidebar';
-import { useSentimentData } from '../hooks/useSentimentData';
-import { initializeProvinceMap } from '../utils/sentiment';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { useState } from 'react';
+import { SentimentMap, SentimentStats, TopicsList, DateDisplay, Sidebar } from '../components';
 import type { ClickInfo } from '../types/sentiment';
-import Icon from '../assets/images/icon.svg';
-import styles from './Home.module.css';
+import Icon from '../assets/icon.svg';
+import { initializeProvinceMap } from '../utils/sentiment';
+
+async function fetchSentimentData() {
+  const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/home`);
+  return response.data.data;
+}
 
 export default function Home() {
   const [clicked, setClicked] = useState<ClickInfo | null>(null);
-  const { data, loading, error } = useSentimentData();
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['sentimentData'],
+    queryFn: fetchSentimentData,
+  });
 
-  useEffect(() => {
-    if (data?.stateData) {
-      initializeProvinceMap(data.stateData);
-    }
-  }, [data]);
-
-  if (loading) {
+  if (isLoading) {
     return (
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <div className={styles.headerLeft}>
-            <img src={Icon} alt="icon" />
-            <h1 className={styles.title}>Indonesia Sentiment Map</h1>
+      <div className="h-screen w-full relative">
+        <div className="absolute top-5 left-5 px-4 py-2.5 bg-white/95 rounded-lg z-800 shadow-sm backdrop-blur-[10px]">
+          <div className="flex items-center gap-2.5">
+            <img src={Icon} alt="icon" className="w-7 h-7" />
+            <h1 className="text-base m-0 font-semibold">Indonesia Sentiment Map</h1>
           </div>
         </div>
-        <div className={styles.loadingState}>
-          <p>Loading sentiment data...</p>
+        <div className="flex justify-center items-center h-screen">
+          <p className="text-base text-gray-800">Loading sentiment data...</p>
         </div>
       </div>
     );
@@ -38,39 +36,43 @@ export default function Home() {
 
   if (error) {
     return (
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <div className={styles.headerLeft}>
-            <img src={Icon} alt="icon" />
-            <h1 className={styles.title}>Indonesia Sentiment Map</h1>
+      <div className="h-screen w-full relative">
+        <div className="absolute top-5 left-5 px-4 py-2.5 bg-white/95 rounded-lg z-800 shadow-sm backdrop-blur-[10px]">
+          <div className="flex items-center gap-2.5">
+            <img src={Icon} alt="icon" className="w-7 h-7" />
+            <h1 className="text-base m-0 font-semibold">Indonesia Sentiment Map</h1>
           </div>
         </div>
-        <div className={styles.errorState}>
-          <p>Error loading data: {error.message}</p>
+        <div className="flex justify-center items-center h-screen">
+          <p className="text-base text-gray-800">Error loading data: {error.message}</p>
         </div>
       </div>
     );
   }
 
+  initializeProvinceMap(data.state_data);
+
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.headerLeft}>
-          <img src={Icon} alt="icon" />
-          <h1 className={styles.title}>Indonesia Sentiment Map</h1>
+    <div className="h-screen w-full relative">
+      <div className="absolute top-5 left-5 px-4 py-2.5 bg-white/95 rounded-lg z-800 shadow-sm backdrop-blur-[10px]">
+        <div className="flex items-center gap-2.5">
+          <img src={Icon} alt="icon" className="w-7 h-7" />
+          <h1 className="text-base m-0 font-semibold">Indonesia Sentiment Map</h1>
         </div>
       </div>
 
-      <div className={`${styles.topRight} ${clicked ? styles.shifted : ''}`}>
-        <DateDisplay datas={data} />
-        <SentimentStats datas={data} />
+      <div
+        className={`absolute top-5 right-5 z-800 flex flex-col items-end gap-2.5 transition-[right] duration-300 ease-out ${clicked ? 'right-[420px]' : ''}`}
+      >
+        <DateDisplay date={data?.date || null} />
+        <SentimentStats datas={data || null} />
       </div>
 
-      <div className={styles.topicsList}>
-        <TopicsList datas={data} />
+      <div className="absolute bottom-5 left-5 w-[300px] z-800">
+        <TopicsList datas={data || null} />
       </div>
 
-      <div className={styles.mapContainer}>
+      <div className="absolute top-0 left-0 w-full h-full">
         <SentimentMap onProvinceClick={setClicked} />
       </div>
 

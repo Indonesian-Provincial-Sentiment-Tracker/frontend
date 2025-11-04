@@ -2,6 +2,7 @@ import js from '@eslint/js';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
+import globals from 'globals';
 
 export default [
   { ignores: ['dist/**', '.npm-cache/**'] },
@@ -11,19 +12,21 @@ export default [
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parser: tseslint.parser,
-      parserOptions: { project: false }
+      parserOptions: { project: false },
+      globals: {
+        ...globals.browser,
+      },
     },
     plugins: {
       react: reactPlugin,
-      'react-hooks': reactHooks
+      'react-hooks': reactHooks,
     },
     rules: {
       'react/jsx-uses-react': 'off',
-      'react/react-in-jsx-scope': 'off'
+      'react/react-in-jsx-scope': 'off',
     },
     settings: {
-      react: { version: 'detect' }
-    }
-  }
+      react: { version: 'detect' },
+    },
+  },
 ];
-

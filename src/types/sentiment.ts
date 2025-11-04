@@ -34,3 +34,7 @@ export interface SentimentResponse {
   data: SentimentData;
   error: boolean;
 }
+
+export interface DateInfo {
+  date: string | null;
+}
