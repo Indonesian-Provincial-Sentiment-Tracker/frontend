@@ -3,5 +3,6 @@ import SentimentStats from '../components/SentimentStats';
 import TopicsList from '../components/TopicsList';
 import DateDisplay from '../components//DateDisplay';
 import Sidebar from '../components/Sidebar';
+import ButtomBarTweet from './BottomBarTweet';
 
-export { SentimentMap, SentimentStats, TopicsList, DateDisplay, Sidebar };
+export { ButtomBarTweet, SentimentMap, SentimentStats, TopicsList, DateDisplay, Sidebar };

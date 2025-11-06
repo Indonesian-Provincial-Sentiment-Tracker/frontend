@@ -1,23 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { useState } from 'react';
-import { SentimentMap, SentimentStats, TopicsList, DateDisplay, Sidebar } from '../components';
+import {
+  SentimentMap,
+  SentimentStats,
+  TopicsList,
+  DateDisplay,
+  Sidebar,
+  ButtomBarTweet,
+} from '../components';
 import Icon from '../assets/icon.svg';
 import { initializeProvinceMap } from '../utils/sentiment';
-
-async function fetchSentimentData(filter?: 'latest' | 'daily' | 'weekly' | 'monthly') {
-  const base = `${import.meta.env.VITE_API_BASE_URL}`;
-  const path = !filter || filter === 'latest' ? '/home' : `/home/${filter}`;
-  const response = await axios.get(`${base}${path}`);
-  return response.data.data;
-}
+import { getHomeService } from '../services/homeService';
 
 export default function Home() {
-  const [clicked, setClicked] = useState<string | null>(null);
+  const [clicked, setClicked] = useState<string | boolean>(false);
+  const [clickedBottomBar, setClickedBottomBar] = useState<boolean | string>(false);
   const [filter, setFilter] = useState<'latest' | 'daily' | 'weekly' | 'monthly'>('latest');
   const { data, isLoading, error } = useQuery({
     queryKey: ['sentimentData', filter],
-    queryFn: () => fetchSentimentData(filter),
+    queryFn: () => getHomeService(filter),
   });
 
   if (isLoading) {
@@ -93,7 +94,15 @@ export default function Home() {
         <SentimentMap onProvinceClick={setClicked} />
       </div>
 
-      <Sidebar clicked={clicked} onClose={() => setClicked(null)} filterDefault={filter} />
+      {clicked && (
+        <Sidebar
+          clicked={clicked}
+          onClose={() => setClicked(false)}
+          filterDefault={filter}
+          setClickedBottomBar={setClickedBottomBar}
+        />
+      )}
+      {clickedBottomBar && <ButtomBarTweet id={clickedBottomBar} />}
     </div>
   );
 }

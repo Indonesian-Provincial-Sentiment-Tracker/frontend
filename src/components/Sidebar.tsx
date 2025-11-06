@@ -1,50 +1,26 @@
-import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { IoClose } from 'react-icons/io5';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, type Dispatch, type SetStateAction } from 'react';
 import { getProvinceDataById } from '../utils/sentiment';
 import { formatDateDisplay } from '../utils/date';
 import { formatPercentage, formatScore } from '../utils/sentimentPercentage';
 import type { StateDetailData, TweetsResponse } from '../types/sentiment';
+import { getSidebarService } from '../services/sidebarService';
+import Pagination from './Pagination';
 
 interface SidebarProps {
-  clicked: string | null;
+  clicked: string | boolean;
   onClose: () => void;
   filterDefault: 'latest' | 'daily' | 'weekly' | 'monthly';
+  setClickedBottomBar: Dispatch<SetStateAction<boolean | string>>;
 }
 
-async function fetchSidebarData(
-  stateId: string,
-  type: string,
-  filter: 'daily' | 'weekly' | 'monthly',
-  page?: number
-) {
-  const base = `${import.meta.env.VITE_API_BASE_URL}`;
-
-  if (type === 'tweets') {
-    let endpoint = `${base}/state/${stateId}/tweets?page=${page || 1}`;
-    if (filter === 'weekly') {
-      endpoint = `${base}/state/${stateId}/weekly/tweets?page=${page || 1}`;
-    } else if (filter === 'monthly') {
-      endpoint = `${base}/state/${stateId}/monthly/tweets?page=${page || 1}`;
-    }
-
-    const response = await axios.get<TweetsResponse>(endpoint);
-    return response.data;
-  }
-
-  let endpoint = `${base}/state/${stateId}`;
-  if (filter === 'weekly') {
-    endpoint = `${base}/state/${stateId}/weekly`;
-  } else if (filter === 'monthly') {
-    endpoint = `${base}/state/${stateId}/monthly`;
-  }
-
-  const response = await axios.get(endpoint);
-  return response.data.data;
-}
-
-export default function Sidebar({ clicked, onClose, filterDefault }: SidebarProps) {
+export default function Sidebar({
+  clicked,
+  onClose,
+  filterDefault,
+  setClickedBottomBar,
+}: SidebarProps) {
   const [activeTab, setActiveTab] = useState({
     name: 'state',
   });
@@ -64,11 +40,14 @@ export default function Sidebar({ clicked, onClose, filterDefault }: SidebarProp
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['sidebarData', clicked, activeTab, filter, currentPage],
-    queryFn: () => fetchSidebarData(clicked!, activeTab.name, filter, currentPage),
-    enabled: !!clicked,
+    queryFn: () => getSidebarService(clicked, activeTab.name, filter, currentPage),
+    enabled: !!clicked && typeof clicked === 'string',
   });
 
-  const provinceInfo = useMemo(() => (clicked ? getProvinceDataById(clicked) : null), [clicked]);
+  const provinceInfo = useMemo(
+    () => (clicked && typeof clicked === 'string' ? getProvinceDataById(clicked) : null),
+    [clicked]
+  );
   const stateData = activeTab.name === 'state' ? (data as StateDetailData | undefined) : undefined;
   const tweetsData = activeTab.name === 'tweets' ? (data as TweetsResponse | undefined) : undefined;
   const dateDisplay = useMemo(() => {
@@ -83,6 +62,7 @@ export default function Sidebar({ clicked, onClose, filterDefault }: SidebarProp
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        setClickedBottomBar(false);
         onClose();
       }
     };
@@ -91,15 +71,16 @@ export default function Sidebar({ clicked, onClose, filterDefault }: SidebarProp
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
-  if (!clicked) return null;
-
   return (
     <>
       <div
         className="fixed inset-0 bg-black/30 z-900 animate-[fadeIn_0.2s_ease-in-out]"
-        onClick={onClose}
+        onClick={() => {
+          setClickedBottomBar(false);
+          onClose();
+        }}
       />
-      <div className="fixed top-0 right-0 w-[400px] h-screen bg-white shadow-[-2px_0_8px_rgba(0,0,0,0.15)] z-950 flex flex-col animate-[slideIn_0.3s_ease-out] max-md:w-full max-md:max-w-[400px]">
+      <div className="fixed top-0 right-0 w-[400px] h-screen bg-white shadow-[-2px_0_8px_rgba(0,0,0,0.15)] z-1000 flex flex-col animate-[slideIn_0.3s_ease-out] max-md:w-full max-md:max-w-[400px]">
         <div className="flex justify-between items-center px-6 py-5 border-b border-gray-200">
           <h2 className="m-0 text-lg font-semibold text-gray-900">
             {provinceInfo?.state_name || 'Detail Provinsi'}
@@ -167,7 +148,6 @@ export default function Sidebar({ clicked, onClose, filterDefault }: SidebarProp
               <div className="border-b border-gray-200 pb-3">
                 <p className="text-xs text-gray-500 m-0">Data per {dateDisplay}</p>
               </div>
-
               {stateData.sentiments && (
                 <div className="flex flex-col gap-3">
                   <h3 className="text-sm font-semibold text-gray-900 m-0 uppercase tracking-wide">
@@ -207,7 +187,6 @@ export default function Sidebar({ clicked, onClose, filterDefault }: SidebarProp
                   </div>
                 </div>
               )}
-
               {stateData.topics && stateData.topics.length > 0 && (
                 <div className="flex flex-col gap-4">
                   <h3 className="text-sm font-semibold text-gray-900 m-0 uppercase tracking-wide">
@@ -270,8 +249,14 @@ export default function Sidebar({ clicked, onClose, filterDefault }: SidebarProp
                           : 'text-red-600 bg-red-50';
 
                     return (
-                      <div key={tweet.tweet_id} className="border border-gray-200 rounded-lg p-4">
-                        <div className="flex items-start gap-3 mb-2">
+                      <div
+                        key={tweet.tweet_id}
+                        className="border border-gray-200 rounded-lg p-4 cursor-pointer"
+                      >
+                        <div
+                          className="flex items-start gap-3 mb-2"
+                          onClick={() => setClickedBottomBar(false)}
+                        >
                           <span className="text-xl shrink-0">{sentimentEmoji}</span>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
@@ -294,7 +279,6 @@ export default function Sidebar({ clicked, onClose, filterDefault }: SidebarProp
                               <a
                                 href={tweet.tweet_url}
                                 target="_blank"
-                                rel="noopener noreferrer"
                                 className="text-[10px] text-blue-600 hover:text-blue-800 hover:underline"
                               >
                                 Lihat Tweet
@@ -311,28 +295,12 @@ export default function Sidebar({ clicked, onClose, filterDefault }: SidebarProp
                   <p className="text-sm text-gray-500">Tidak ada tweet tersedia</p>
                 </div>
               )}
-
-              <div className="flex items-center justify-between pt-2 border-t border-gray-200">
-                <button
-                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-                  disabled={currentPage === 1}
-                  className="cursor-pointer text-xs text-gray-600 hover:text-gray-900 font-medium px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
-                >
-                  ← Previous
-                </button>
-
-                <span className="text-xs text-gray-600 font-medium">
-                  Page {tweetsData.current_page} of {tweetsData.total_page}
-                </span>
-
-                <button
-                  onClick={() => setCurrentPage((prev) => prev + 1)}
-                  disabled={!tweetsData.has_next}
-                  className="cursor-pointer text-xs text-gray-600 hover:text-gray-900 font-medium px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
-                >
-                  Next →
-                </button>
-              </div>
+              <Pagination
+                currentPage={tweetsData.current_page}
+                totalPage={tweetsData.total_page}
+                hasNext={tweetsData.has_next}
+                onPageChange={setCurrentPage}
+              />
             </div>
           ) : null}
         </div>
