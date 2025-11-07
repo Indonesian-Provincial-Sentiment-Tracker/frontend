@@ -11,36 +11,36 @@ import Pagination from './Pagination';
 interface SidebarProps {
   clicked: string | boolean;
   onClose: () => void;
-  filterDefault: 'latest' | 'daily' | 'weekly' | 'monthly';
+  filter: 'latest' | 'daily' | 'weekly' | 'monthly';
+  option: {
+    date?: string | false;
+    from_date?: string | false;
+    to_date?: string | false;
+    month?: string | false;
+    year?: string | false;
+  };
   setClickedBottomBar: Dispatch<SetStateAction<boolean | string>>;
 }
 
 export default function Sidebar({
   clicked,
   onClose,
-  filterDefault,
+  filter,
+  option,
   setClickedBottomBar,
 }: SidebarProps) {
   const [activeTab, setActiveTab] = useState({
     name: 'state',
   });
-  const [filter, setFilter] = useState<'daily' | 'weekly' | 'monthly'>(
-    filterDefault === 'latest' ? 'daily' : filterDefault
-  );
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const newFilter = filterDefault === 'latest' ? 'daily' : filterDefault;
-    setFilter(newFilter);
-  }, [filterDefault]);
-
-  useEffect(() => {
     setCurrentPage(1);
-  }, [filter, activeTab.name]);
+  }, [filter, activeTab.name, option]);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['sidebarData', clicked, activeTab, filter, currentPage],
-    queryFn: () => getSidebarService(clicked, activeTab.name, filter, currentPage),
+    queryKey: ['sidebarData', clicked, activeTab, filter, option, currentPage],
+    queryFn: () => getSidebarService(clicked, activeTab.name, filter, option, currentPage),
     enabled: !!clicked && typeof clicked === 'string',
   });
 
@@ -93,7 +93,7 @@ export default function Sidebar({
           </button>
         </div>
 
-        <div className="px-6 py-4 border-b border-gray-100 flex flex-col gap-3">
+        <div className="px-6 py-4 border-b border-gray-100">
           <div className="flex gap-2">
             <button
               className={`flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
@@ -115,22 +115,6 @@ export default function Sidebar({
             >
               Tweets
             </button>
-          </div>
-
-          <div className="flex gap-1.5">
-            {(['daily', 'weekly', 'monthly'] as const).map((filt) => (
-              <button
-                key={filt}
-                onClick={() => setFilter(filt)}
-                className={`flex-1 text-xs px-3 py-1.5 rounded-md transition-colors duration-150 cursor-pointer ${
-                  filter === filt
-                    ? 'bg-gray-900 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                {filt.charAt(0).toUpperCase() + filt.slice(1)}
-              </button>
-            ))}
           </div>
         </div>
 
@@ -251,12 +235,10 @@ export default function Sidebar({
                     return (
                       <div
                         key={tweet.tweet_id}
-                        className="border border-gray-200 rounded-lg p-4 cursor-pointer"
+                        className="border border-gray-200 rounded-lg p-4 cursor-pointer hover:border-gray-300 transition-colors"
+                        onClick={() => setClickedBottomBar(tweet.tweet_id)}
                       >
-                        <div
-                          className="flex items-start gap-3 mb-2"
-                          onClick={() => setClickedBottomBar(false)}
-                        >
+                        <div className="flex items-start gap-3 mb-2">
                           <span className="text-xl shrink-0">{sentimentEmoji}</span>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
@@ -280,6 +262,7 @@ export default function Sidebar({
                                 href={tweet.tweet_url}
                                 target="_blank"
                                 className="text-[10px] text-blue-600 hover:text-blue-800 hover:underline"
+                                onClick={(e) => e.stopPropagation()}
                               >
                                 Lihat Tweet
                               </a>

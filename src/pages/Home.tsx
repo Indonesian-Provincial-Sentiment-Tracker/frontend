@@ -15,10 +15,23 @@ import { getHomeService } from '../services/homeService';
 export default function Home() {
   const [clicked, setClicked] = useState<string | boolean>(false);
   const [clickedBottomBar, setClickedBottomBar] = useState<boolean | string>(false);
+  const [option, setOption] = useState<{
+    date?: string | false;
+    from_date?: string | false;
+    to_date?: string | false;
+    month?: string | false;
+    year?: string | false;
+  }>({
+    date: false,
+    from_date: false,
+    to_date: false,
+    month: false,
+    year: false,
+  });
   const [filter, setFilter] = useState<'latest' | 'daily' | 'weekly' | 'monthly'>('latest');
   const { data, isLoading, error } = useQuery({
-    queryKey: ['sentimentData', filter],
-    queryFn: () => getHomeService(filter),
+    queryKey: ['sentimentData', option],
+    queryFn: () => getHomeService(filter, option),
   });
 
   if (isLoading) {
@@ -63,26 +76,30 @@ export default function Home() {
           <h1 className="text-base m-0 font-semibold">Indonesia Sentiment Map</h1>
         </div>
       </div>
+      <div className="z-850 bg-white absolute top-18 left-5 w-64 px-4 py-2.5 rounded-md">
+        <div>
+          <span className="inline-block w-3 h-3 bg-yellow-300 mr-2 rounded-full"></span>
+          Netral
+        </div>
+        <div>
+          <span className="inline-block w-3 h-3 bg-green-500 mr-2 rounded-full"></span>
+          Positif
+        </div>
+        <div>
+          <span className="inline-block w-3 h-3 bg-red-500 mr-2 rounded-full"></span>
+          Negatif
+        </div>
+      </div>
 
       <div
         className={`absolute top-5 right-5 z-800 flex flex-col items-end gap-2.5 transition-[right] duration-300 ease-out ${clicked ? 'right-[420px]' : ''}`}
       >
-        <div className="flex items-center gap-3">
-          <DateDisplay datas={data || null} />
-          <div className="flex items-center gap-1 bg-white/90 px-4.5 py-1 rounded-md shadow-sm">
-            {(['latest', 'daily', 'weekly', 'monthly'] as const).map((filt) => (
-              <button
-                key={filt}
-                onClick={() => setFilter(filt)}
-                className={`text-xs cursor-pointer px-2 py-1 rounded-md transition-colors duration-150 ${
-                  filter === filt ? 'bg-[#F05454] text-white' : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                {filt === 'latest' ? 'Latest' : filt.charAt(0).toUpperCase() + filt.slice(1)}
-              </button>
-            ))}
-          </div>
-        </div>
+        <DateDisplay
+          datas={data || null}
+          filter={filter}
+          setFilter={setFilter}
+          setOption={setOption}
+        />
         <SentimentStats datas={data || null} />
       </div>
 
@@ -98,7 +115,8 @@ export default function Home() {
         <Sidebar
           clicked={clicked}
           onClose={() => setClicked(false)}
-          filterDefault={filter}
+          filter={filter}
+          option={option}
           setClickedBottomBar={setClickedBottomBar}
         />
       )}

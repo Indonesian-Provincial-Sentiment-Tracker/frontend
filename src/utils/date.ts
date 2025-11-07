@@ -10,6 +10,35 @@ export function formatSingleDate(dateStr: string): string {
   });
 }
 
+export function getWeekRange(date: Date): { from: Date; to: Date } {
+  const dayOfWeek = date.getDay();
+
+  const daysToSunday = dayOfWeek === 0 ? 0 : dayOfWeek;
+
+  const from = new Date(date);
+  from.setDate(date.getDate() - daysToSunday);
+  from.setHours(0, 0, 0, 0);
+
+  const to = new Date(from);
+  to.setDate(from.getDate() + 7);
+  to.setHours(23, 59, 59, 999);
+
+  return { from, to };
+}
+
+export function formatWeekDisplay(from: Date, to: Date): string {
+  const fromStr = from.toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'short',
+  });
+  const toStr = to.toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+  return `${fromStr} - ${toStr}`;
+}
+
 export function formatDateDisplay(dateData: DateInfo | null | undefined): string {
   if (!dateData) return 'N/A';
 
