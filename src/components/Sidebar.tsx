@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { IoClose } from 'react-icons/io5';
+import { MdInbox } from 'react-icons/md';
 import { useState, useEffect, useMemo, type Dispatch, type SetStateAction } from 'react';
 import { getProvinceDataById } from '../utils/sentiment';
 import { formatDateDisplay } from '../utils/date';
@@ -120,12 +121,14 @@ export default function Sidebar({
 
         <div className="flex-1 p-6 overflow-y-auto">
           {isLoading ? (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-sm text-gray-500">Memuat data...</p>
+            <div className="flex flex-col items-center justify-center h-full gap-3">
+              <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-800 rounded-full animate-spin"></div>
+              <p className="text-sm text-gray-600">Memuat data...</p>
             </div>
           ) : error ? (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-sm text-red-500">Gagal memuat data</p>
+            <div className="flex flex-col items-center justify-center h-full gap-3 text-center">
+              <MdInbox className="w-12 h-12 text-gray-400" />
+              <p className="text-sm text-gray-600">Gagal memuat data</p>
             </div>
           ) : activeTab.name === 'state' && stateData ? (
             <div className="flex flex-col gap-6">
@@ -211,8 +214,9 @@ export default function Sidebar({
               </div>
 
               {isLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <p className="text-sm text-gray-500">Memuat tweets...</p>
+                <div className="flex flex-col items-center justify-center py-8 gap-3">
+                  <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-800 rounded-full animate-spin"></div>
+                  <p className="text-sm text-gray-600">Memuat tweets...</p>
                 </div>
               ) : tweetsData.data.tweets && tweetsData.data.tweets.length > 0 ? (
                 <div className="flex flex-col gap-3">
@@ -274,8 +278,9 @@ export default function Sidebar({
                   })}
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-full">
-                  <p className="text-sm text-gray-500">Tidak ada tweet tersedia</p>
+                <div className="flex flex-col items-center justify-center h-full gap-3 text-center">
+                  <MdInbox className="w-12 h-12 text-gray-400" />
+                  <p className="text-sm text-gray-600">Tidak ada tweet tersedia</p>
                 </div>
               )}
               <Pagination

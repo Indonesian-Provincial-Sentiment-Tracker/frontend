@@ -4,5 +4,14 @@ import TopicsList from '../components/TopicsList';
 import DateDisplay from './DateDisplay';
 import Sidebar from '../components/Sidebar';
 import ButtomBarTweet from './BottomBarTweet';
+import HeaderLogo from './HeaderLogo';
 
-export { ButtomBarTweet, SentimentMap, SentimentStats, TopicsList, DateDisplay, Sidebar };
+export {
+  HeaderLogo,
+  ButtomBarTweet,
+  SentimentMap,
+  SentimentStats,
+  TopicsList,
+  DateDisplay,
+  Sidebar,
+};

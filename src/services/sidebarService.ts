@@ -22,7 +22,7 @@ export async function getSidebarService(
 
   if (filter === 'daily' && option.date) {
     params.append('date', option.date.toString());
-    endpoint = `${base}/state/${stateId}/daily`;
+    endpoint = `${base}/state/${stateId}`;
   } else if (filter === 'weekly' && option.from_date && option.to_date) {
     params.append('from_date', option.from_date.toString());
     params.append('to_date', option.to_date.toString());

@@ -36,7 +36,12 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
     (date: Date | undefined) => {
       setSelected(date);
       if (date) {
-        const formattedDate = date.toISOString().split('T')[0];
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+        console.log(formattedDate);
+
         setOption((prev) => ({
           ...prev,
           date: formattedDate,
@@ -57,8 +62,15 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
         const { from, to } = getWeekRange(date);
         setSelectedWeek(from);
 
-        const fromFormatted = from.toISOString().split('T')[0];
-        const toFormatted = to.toISOString().split('T')[0];
+        const fromYear = from.getFullYear();
+        const fromMonth = String(from.getMonth() + 1).padStart(2, '0');
+        const fromDay = String(from.getDate()).padStart(2, '0');
+        const fromFormatted = `${fromYear}-${fromMonth}-${fromDay}`;
+
+        const toYear = to.getFullYear();
+        const toMonth = String(to.getMonth() + 1).padStart(2, '0');
+        const toDay = String(to.getDate()).padStart(2, '0');
+        const toFormatted = `${toYear}-${toMonth}-${toDay}`;
 
         setOption((prev) => ({
           ...prev,
@@ -243,14 +255,14 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
                 onClick={handleYearDecrement}
                 className="p-1 hover:bg-gray-100 rounded transition-colors"
               >
-                <HiChevronLeft className="w-5 h-5 text-gray-600" />
+                <HiChevronLeft className="w-5 h-5 text-gray-600 cursor-pointer" />
               </button>
               <span className="text-sm font-semibold text-gray-700">{currentYear}</span>
               <button
                 onClick={handleYearIncrement}
                 className="p-1 hover:bg-gray-100 rounded transition-colors"
               >
-                <HiChevronRight className="w-5 h-5 text-gray-600" />
+                <HiChevronRight className="w-5 h-5 text-gray-600 cursor-pointer" />
               </button>
             </div>
 
@@ -267,7 +279,7 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
                     key={month}
                     onClick={() => handleCustomMonthSelect(monthNum, currentYear)}
                     className={`
-                      px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-150
+                      px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-150 cursor-pointer
                       ${
                         isSelected
                           ? 'bg-[#F05454] text-white shadow-sm'

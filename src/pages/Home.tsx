@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { MdInbox, MdErrorOutline } from 'react-icons/md';
 import {
   SentimentMap,
   SentimentStats,
@@ -7,8 +8,9 @@ import {
   DateDisplay,
   Sidebar,
   ButtomBarTweet,
+  HeaderLogo,
 } from '../components';
-import Icon from '../assets/icon.svg';
+
 import { initializeProvinceMap } from '../utils/sentiment';
 import { getHomeService } from '../services/homeService';
 
@@ -36,15 +38,39 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="h-screen w-full relative">
-        <div className="absolute top-5 left-5 px-4 py-2.5 bg-white/95 rounded-lg z-800 shadow-sm backdrop-blur-[10px]">
-          <div className="flex items-center gap-2.5">
-            <img src={Icon} alt="icon" className="w-7 h-7" />
-            <h1 className="text-base m-0 font-semibold">Indonesia Sentiment Map</h1>
-          </div>
+      <div className="h-screen w-full flex items-center justify-center bg-white">
+        <HeaderLogo />
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-800 rounded-full animate-spin"></div>
+          <p className="text-sm text-gray-600">Memuat data...</p>
         </div>
-        <div className="flex justify-center items-center h-screen">
-          <p className="text-base text-gray-800">Loading sentiment data...</p>
+      </div>
+    );
+  }
+
+  const isNoData =
+    (error as { response?: { data?: { message?: string } } })?.response?.data?.message ===
+    'sql: no rows in result set';
+
+  if (isNoData) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-white">
+        <HeaderLogo />
+        <div className="absolute top-5 right-5 z-800">
+          <DateDisplay datas={null} filter={filter} setFilter={setFilter} setOption={setOption} />
+        </div>
+        <div className="flex flex-col items-center gap-4 text-center">
+          <MdInbox className="w-16 h-16 text-gray-400" />
+          <div>
+            <p className="text-gray-800 font-medium mb-1">Data tidak tersedia</p>
+            <p className="text-sm text-gray-500">Coba dengan filter lain</p>
+          </div>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-2 px-4 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 transition-colors cursor-pointer"
+          >
+            Muat Ulang
+          </button>
         </div>
       </div>
     );
@@ -52,15 +78,20 @@ export default function Home() {
 
   if (error) {
     return (
-      <div className="h-screen w-full relative">
-        <div className="absolute top-5 left-5 px-4 py-2.5 bg-white/95 rounded-lg z-800 shadow-sm backdrop-blur-[10px]">
-          <div className="flex items-center gap-2.5">
-            <img src={Icon} alt="icon" className="w-7 h-7" />
-            <h1 className="text-base m-0 font-semibold">Indonesia Sentiment Map</h1>
+      <div className="h-screen w-full flex items-center justify-center bg-white">
+        <HeaderLogo />
+        <div className="flex flex-col items-center gap-4 text-center max-w-md">
+          <MdErrorOutline className="w-16 h-16 text-red-500" />
+          <div>
+            <p className="text-gray-800 font-medium mb-1">Terjadi kesalahan</p>
+            <p className="text-sm text-gray-500">{error.message}</p>
           </div>
-        </div>
-        <div className="flex justify-center items-center h-screen">
-          <p className="text-base text-gray-800">Error loading data: {error.message}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-2 px-4 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 transition-colors cursor-pointer"
+          >
+            Coba Lagi
+          </button>
         </div>
       </div>
     );
@@ -70,12 +101,7 @@ export default function Home() {
 
   return (
     <div className="h-screen w-full relative">
-      <div className="absolute top-5 left-5 px-4 py-2.5 bg-white/95 rounded-lg z-800 shadow-sm backdrop-blur-[10px]">
-        <div className="flex items-center gap-2.5">
-          <img src={Icon} alt="icon" className="w-7 h-7" />
-          <h1 className="text-base m-0 font-semibold">Indonesia Sentiment Map</h1>
-        </div>
-      </div>
+      <HeaderLogo />
       <div className="z-850 bg-white absolute top-18 left-5 w-64 px-4 py-2.5 rounded-md">
         <div>
           <span className="inline-block w-3 h-3 bg-yellow-300 mr-2 rounded-full"></span>
