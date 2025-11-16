@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MdInbox, MdErrorOutline } from 'react-icons/md';
+import { IoWarning, IoInformationCircle, IoCloseCircle } from 'react-icons/io5';
 import {
   SentimentMap,
   SentimentStats,
@@ -13,6 +14,12 @@ import {
 
 import { initializeProvinceMap } from '../utils/sentiment';
 import { getHomeService } from '../services/homeService';
+import { notificationService } from '../services/notificationService';
+
+interface NotificationProps {
+  event_type: string;
+  value: string;
+}
 
 export default function Home() {
   const [clicked, setClicked] = useState<string | boolean>(false);
@@ -30,11 +37,47 @@ export default function Home() {
     month: false,
     year: false,
   });
-  const [filter, setFilter] = useState<'latest' | 'daily' | 'weekly' | 'monthly'>('latest');
+  const [notificationData, setNotificationData] = useState<NotificationProps | null>(null);
+  const [filter, setFilter] = useState<{
+    name: 'latest' | 'daily' | 'weekly' | 'monthly';
+    key: number;
+  }>({ name: 'latest', key: 0 });
+  const [uniqueKey, setUniqueKey] = useState(0);
+  const filterRef = useRef(filter.name);
+  const optionRef = useRef(option.date);
+
+  useEffect(() => {
+    filterRef.current = filter.name;
+  }, [filter.name]);
+
+  useEffect(() => {
+    optionRef.current = option.date;
+  }, [option.date]);
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ['sentimentData', option],
-    queryFn: () => getHomeService(filter, option),
+    queryKey: ['sentimentData', option, uniqueKey, filter.key],
+    queryFn: () => getHomeService(filter.name, option),
   });
+
+  useEffect(() => {
+    const cleanup = notificationService(
+      setNotificationData,
+      setUniqueKey,
+      () => filterRef.current,
+      () => optionRef.current || false
+    );
+    return cleanup;
+  }, []);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setNotificationData(null);
+    }, 5000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [notificationData]);
 
   if (isLoading) {
     return (
@@ -116,6 +159,32 @@ export default function Home() {
           Negatif
         </div>
       </div>
+
+      {notificationData && (
+        <div
+          className={`w-72 min-h-24 bg-white/30 backdrop-blur-lg z-950 absolute top-4 left-1/2 -translate-x-1/2 rounded shadow-sm p-3 flex flex-col animate-[slideDown_0.4s_ease-out,fadeIn_0.3s_ease-in] ${
+            notificationData.event_type === 'Info'
+              ? 'shadow-green-500/40'
+              : notificationData.event_type === 'Warning'
+                ? 'shadow-yellow-500/40'
+                : 'shadow-red-500/40'
+          }`}
+        >
+          <div className="flex items-center gap-1">
+            {notificationData.event_type === 'Info' ? (
+              <IoInformationCircle className="w-5 h-5 text-green-500" />
+            ) : notificationData.event_type === 'Warning' ? (
+              <IoWarning className="w-5 h-5 text-yellow-500" />
+            ) : (
+              <IoCloseCircle className="w-5 h-5 text-red-500" />
+            )}
+            <p>{notificationData.event_type}</p>
+          </div>
+          <div className="flex-1 flex items-center">
+            <p className="w-full wrap-break-word font-semibold">{notificationData.value}</p>
+          </div>
+        </div>
+      )}
 
       <div
         className={`absolute top-5 right-5 z-800 flex flex-col items-end gap-2.5 transition-[right] duration-300 ease-out ${clicked ? 'right-[420px]' : ''}`}

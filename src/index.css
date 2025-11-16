@@ -22,3 +22,14 @@
     transform: translateX(0);
   }
 }
+
+@keyframes slideDown {
+  from {
+    transform: translate(0, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}

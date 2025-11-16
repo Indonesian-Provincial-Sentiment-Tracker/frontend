@@ -7,8 +7,16 @@ import { formatDateDisplay, getWeekRange } from '../utils/date';
 
 interface DateDisplayProps {
   datas: SentimentData | null;
-  filter: string;
-  setFilter: Dispatch<SetStateAction<'latest' | 'daily' | 'weekly' | 'monthly'>>;
+  filter: {
+    name: 'latest' | 'daily' | 'weekly' | 'monthly';
+    key: number;
+  };
+  setFilter: Dispatch<
+    SetStateAction<{
+      name: 'latest' | 'daily' | 'weekly' | 'monthly';
+      key: number;
+    }>
+  >;
   setOption: Dispatch<
     SetStateAction<{
       date?: string | false;
@@ -40,7 +48,6 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const formattedDate = `${year}-${month}-${day}`;
-        console.log(formattedDate);
 
         setOption((prev) => ({
           ...prev,
@@ -50,10 +57,14 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
           month: false,
           year: false,
         }));
+        setFilter((prev) => ({
+          ...prev,
+          key: prev.key + 1,
+        }));
         setIsPickerVisible(false);
       }
     },
-    [setOption]
+    [setOption, setFilter]
   );
 
   const handleWeekSelect = useCallback(
@@ -80,10 +91,14 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
           month: false,
           year: false,
         }));
+        setFilter((prev) => ({
+          ...prev,
+          key: prev.key + 1,
+        }));
         setIsPickerVisible(false);
       }
     },
-    [setOption]
+    [setOption, setFilter]
   );
 
   const handleCustomMonthSelect = useCallback(
@@ -99,14 +114,21 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
         month: month.toString(),
         year: year.toString(),
       }));
+      setFilter((prev) => ({
+        ...prev,
+        key: prev.key + 1,
+      }));
       setIsPickerVisible(false);
     },
-    [setOption]
+    [setOption, setFilter]
   );
 
   const handleFilterChange = useCallback(
     (newFilter: (typeof filterList)[number]) => {
-      setFilter(newFilter);
+      setFilter((prev) => ({
+        name: newFilter,
+        key: newFilter === 'latest' ? prev.key + 1 : prev.key,
+      }));
       if (newFilter === 'latest') {
         setIsPickerVisible(false);
         setOption({
@@ -125,7 +147,7 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
 
   const handleMouseEnterFilter = useCallback(
     (filt: (typeof filterList)[number]) => {
-      if (filt !== 'latest' && filter === filt) {
+      if (filt !== 'latest' && filter.name === filt) {
         setIsPickerVisible(true);
       }
     },
@@ -206,14 +228,14 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
             onClick={() => handleFilterChange(filt)}
             onMouseEnter={() => handleMouseEnterFilter(filt)}
             className={`text-xs cursor-pointer px-2 py-1 rounded-md transition-colors duration-150 ${
-              filter === filt ? 'bg-[#F05454] text-white' : 'text-gray-700 hover:bg-gray-100'
+              filter.name === filt ? 'bg-[#F05454] text-white' : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
             {filt === 'latest' ? 'Latest' : filt.charAt(0).toUpperCase() + filt.slice(1)}
           </button>
         ))}
 
-        {filter === 'daily' && isPickerVisible && (
+        {filter.name === 'daily' && isPickerVisible && (
           <div
             className="absolute right-0 top-10 bg-white p-4 z-1200 rounded-lg shadow-xl border border-gray-200"
             onMouseLeave={handleMouseLeavePickerDaily}
@@ -227,7 +249,7 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
           </div>
         )}
 
-        {filter === 'weekly' && isPickerVisible && (
+        {filter.name === 'weekly' && isPickerVisible && (
           <div
             className="absolute right-0 top-10 bg-white p-4 z-1200 rounded-lg shadow-xl border border-gray-200"
             onMouseLeave={handleMouseLeavePickerWeekly}
@@ -245,7 +267,7 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
           </div>
         )}
 
-        {filter === 'monthly' && isPickerVisible && (
+        {filter.name === 'monthly' && isPickerVisible && (
           <div
             className="absolute right-0 top-10 bg-white p-4 z-1200 rounded-lg shadow-xl border border-gray-200 w-[280px]"
             onMouseLeave={handleMouseLeavePickerMonthly}

@@ -12,7 +12,10 @@ import Pagination from './Pagination';
 interface SidebarProps {
   clicked: string | boolean;
   onClose: () => void;
-  filter: 'latest' | 'daily' | 'weekly' | 'monthly';
+  filter: {
+    name: 'latest' | 'daily' | 'weekly' | 'monthly';
+    key: number;
+  };
   option: {
     date?: string | false;
     from_date?: string | false;
@@ -37,11 +40,11 @@ export default function Sidebar({
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [filter, activeTab.name, option]);
+  }, [filter.name, filter.key, activeTab.name, option]);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['sidebarData', clicked, activeTab, filter, option, currentPage],
-    queryFn: () => getSidebarService(clicked, activeTab.name, filter, option, currentPage),
+    queryKey: ['sidebarData', clicked, activeTab, filter.name, filter.key, option, currentPage],
+    queryFn: () => getSidebarService(clicked, activeTab.name, filter.name, option, currentPage),
     enabled: !!clicked && typeof clicked === 'string',
   });
 
