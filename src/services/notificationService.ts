@@ -14,8 +14,7 @@ export function notificationService(
 ) {
   const sse = new EventSource(`${import.meta.env.VITE_API_BASE_URL}/notify`);
 
-  sse.onerror = (err) => {
-    console.log(err);
+  sse.onerror = () => {
     sse.close();
   };
 

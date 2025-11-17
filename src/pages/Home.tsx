@@ -23,6 +23,8 @@ interface NotificationProps {
 
 export default function Home() {
   const [clicked, setClicked] = useState<string | boolean>(false);
+  const [selected, setSelected] = useState<Date>(new Date());
+  const [selectedWeek, setSelectedWeek] = useState<Date>(new Date());
   const [clickedBottomBar, setClickedBottomBar] = useState<boolean | string>(false);
   const [option, setOption] = useState<{
     date?: string | false;
@@ -100,7 +102,16 @@ export default function Home() {
       <div className="h-screen w-full flex items-center justify-center bg-white">
         <HeaderLogo />
         <div className="absolute top-5 right-5 z-800">
-          <DateDisplay datas={null} filter={filter} setFilter={setFilter} setOption={setOption} />
+          <DateDisplay
+            datas={null}
+            filter={filter}
+            setFilter={setFilter}
+            setOption={setOption}
+            selected={selected}
+            setSelected={setSelected}
+            selectedWeek={selectedWeek}
+            setSelectedWeek={setSelectedWeek}
+          />
         </div>
         <div className="flex flex-col items-center gap-4 text-center">
           <MdInbox className="w-16 h-16 text-gray-400" />
@@ -194,6 +205,10 @@ export default function Home() {
           filter={filter}
           setFilter={setFilter}
           setOption={setOption}
+          selected={selected}
+          setSelected={setSelected}
+          selectedWeek={selectedWeek}
+          setSelectedWeek={setSelectedWeek}
         />
         <SentimentStats datas={data || null} />
       </div>

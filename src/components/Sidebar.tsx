@@ -91,7 +91,10 @@ export default function Sidebar({
           </h2>
           <button
             className="bg-transparent border-none text-2xl leading-none text-gray-500 cursor-pointer p-1 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
-            onClick={onClose}
+            onClick={() => {
+              setClickedBottomBar(false);
+              onClose();
+            }}
           >
             <IoClose />
           </button>

@@ -5,49 +5,60 @@ import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
 import type { SentimentData } from '../types/sentiment';
 import { formatDateDisplay, getWeekRange } from '../utils/date';
 
+type FilterName = 'latest' | 'daily' | 'weekly' | 'monthly';
+
+interface FilterState {
+  name: FilterName;
+  key: number;
+}
+
+interface OptionState {
+  date?: string | false;
+  from_date?: string | false;
+  to_date?: string | false;
+  month?: string | false;
+  year?: string | false;
+}
+
 interface DateDisplayProps {
   datas: SentimentData | null;
-  filter: {
-    name: 'latest' | 'daily' | 'weekly' | 'monthly';
-    key: number;
-  };
-  setFilter: Dispatch<
-    SetStateAction<{
-      name: 'latest' | 'daily' | 'weekly' | 'monthly';
-      key: number;
-    }>
-  >;
-  setOption: Dispatch<
-    SetStateAction<{
-      date?: string | false;
-      from_date?: string | false;
-      to_date?: string | false;
-      month?: string | false;
-      year?: string | false;
-    }>
-  >;
+  filter: FilterState;
+  setFilter: Dispatch<SetStateAction<FilterState>>;
+  setOption: Dispatch<SetStateAction<OptionState>>;
+  selected: Date | undefined;
+  setSelected: Dispatch<SetStateAction<Date>>;
+  selectedWeek: Date | undefined;
+  setSelectedWeek: Dispatch<SetStateAction<Date>>;
 }
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'];
 
-export default function DateDisplay({ datas, setFilter, filter, setOption }: DateDisplayProps) {
-  const [selected, setSelected] = useState<Date>();
-  const [selectedWeek, setSelectedWeek] = useState<Date>();
-  const [selectedMonth, setSelectedMonth] = useState<Date>();
+export default function DateDisplay({
+  datas,
+  setFilter,
+  filter,
+  setOption,
+  selected,
+  setSelected,
+  selectedWeek,
+  setSelectedWeek,
+}: DateDisplayProps) {
+  const [selectedMonth, setSelectedMonth] = useState<Date>(new Date());
   const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear());
   const [hoveredWeek, setHoveredWeek] = useState<Date | null>(null);
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const filterList = ['latest', 'daily', 'weekly', 'monthly'] as const;
-  const formattedDate = useMemo(() => formatDateDisplay(datas), [datas]);
+  const dateDisplay = useMemo(() => formatDateDisplay(datas), [datas]);
 
   const handleDateSelect = useCallback(
     (date: Date | undefined) => {
-      setSelected(date);
       if (date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const formattedDate = `${year}-${month}-${day}`;
+
+        setSelected(date);
 
         setOption((prev) => ({
           ...prev,
@@ -64,7 +75,7 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
         setIsPickerVisible(false);
       }
     },
-    [setOption, setFilter]
+    [setOption, setFilter, setSelected]
   );
 
   const handleWeekSelect = useCallback(
@@ -98,7 +109,7 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
         setIsPickerVisible(false);
       }
     },
-    [setOption, setFilter]
+    [setOption, setFilter, setSelectedWeek]
   );
 
   const handleCustomMonthSelect = useCallback(
@@ -217,18 +228,20 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
 
   return (
     <div className="flex items-center gap-3">
-      <div className="bg-white/95 rounded-lg px-3.5 py-2 shadow-sm backdrop-blur-[10px] flex items-center gap-1.5">
-        <span className="text-[11px] text-gray-600">Data per:</span>
-        <span className="text-[11px] font-semibold text-gray-800">{formattedDate}</span>
+      <div className="bg-white/95 rounded-lg px-4 py-2.5 shadow-md backdrop-blur-sm border border-gray-100 flex items-center gap-2">
+        <span className="text-xs text-gray-500 font-medium">Data per:</span>
+        <span className="text-xs font-semibold text-gray-800">{dateDisplay}</span>
       </div>
-      <div className="relative flex items-center gap-1 bg-white/90 px-4.5 py-1 rounded-md shadow-sm">
+      <div className="relative flex items-center gap-1.5 bg-white/95 px-2 py-1.5 rounded-lg shadow-md border border-gray-100">
         {filterList.map((filt) => (
           <button
             key={filt}
             onClick={() => handleFilterChange(filt)}
             onMouseEnter={() => handleMouseEnterFilter(filt)}
-            className={`text-xs cursor-pointer px-2 py-1 rounded-md transition-colors duration-150 ${
-              filter.name === filt ? 'bg-[#F05454] text-white' : 'text-gray-700 hover:bg-gray-100'
+            className={`text-xs font-medium px-3 py-1.5 rounded-md transition-all duration-200 ease-in-out ${
+              filter.name === filt
+                ? 'bg-[#F05454] text-white shadow-sm scale-105'
+                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
             }`}
           >
             {filt === 'latest' ? 'Latest' : filt.charAt(0).toUpperCase() + filt.slice(1)}
@@ -237,7 +250,7 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
 
         {filter.name === 'daily' && isPickerVisible && (
           <div
-            className="absolute right-0 top-10 bg-white p-4 z-1200 rounded-lg shadow-xl border border-gray-200"
+            className="absolute right-0 top-12 bg-white p-5 z-1200 rounded-xl shadow-2xl border border-gray-200 animate-slideDown"
             onMouseLeave={handleMouseLeavePickerDaily}
           >
             <DayPicker
@@ -245,13 +258,14 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
               selected={selected}
               onSelect={handleDateSelect}
               defaultMonth={selected}
+              className="date-picker-daily"
             />
           </div>
         )}
 
         {filter.name === 'weekly' && isPickerVisible && (
           <div
-            className="absolute right-0 top-10 bg-white p-4 z-1200 rounded-lg shadow-xl border border-gray-200"
+            className="absolute right-0 top-12 bg-white p-5 z-1200 rounded-xl shadow-2xl border border-gray-200 animate-slideDown"
             onMouseLeave={handleMouseLeavePickerWeekly}
           >
             <DayPicker
@@ -263,32 +277,35 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
               onDayMouseLeave={handleDayMouseLeave}
               modifiers={weekModifiers}
               modifiersStyles={weekModifiersStyles}
+              className="date-picker-weekly"
             />
           </div>
         )}
 
         {filter.name === 'monthly' && isPickerVisible && (
           <div
-            className="absolute right-0 top-10 bg-white p-4 z-1200 rounded-lg shadow-xl border border-gray-200 w-[280px]"
+            className="absolute right-0 top-12 bg-white p-5 z-1200 rounded-xl shadow-2xl border border-gray-200 w-[300px] animate-slideDown"
             onMouseLeave={handleMouseLeavePickerMonthly}
           >
-            <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-200">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200">
               <button
                 onClick={handleYearDecrement}
-                className="p-1 hover:bg-gray-100 rounded transition-colors"
+                className="p-1.5 hover:bg-gray-100 rounded-lg transition-all duration-200 hover:scale-110"
+                aria-label="Previous year"
               >
-                <HiChevronLeft className="w-5 h-5 text-gray-600 cursor-pointer" />
+                <HiChevronLeft className="w-5 h-5 text-gray-600" />
               </button>
-              <span className="text-sm font-semibold text-gray-700">{currentYear}</span>
+              <span className="text-base font-bold text-gray-800">{currentYear}</span>
               <button
                 onClick={handleYearIncrement}
-                className="p-1 hover:bg-gray-100 rounded transition-colors"
+                className="p-1.5 hover:bg-gray-100 rounded-lg transition-all duration-200 hover:scale-110"
+                aria-label="Next year"
               >
-                <HiChevronRight className="w-5 h-5 text-gray-600 cursor-pointer" />
+                <HiChevronRight className="w-5 h-5 text-gray-600" />
               </button>
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2.5">
               {months.map((month, index) => {
                 const monthNum = index + 1;
                 const isSelected =
@@ -301,11 +318,11 @@ export default function DateDisplay({ datas, setFilter, filter, setOption }: Dat
                     key={month}
                     onClick={() => handleCustomMonthSelect(monthNum, currentYear)}
                     className={`
-                      px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-150 cursor-pointer
+                      px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 
                       ${
                         isSelected
-                          ? 'bg-[#F05454] text-white shadow-sm'
-                          : 'bg-gray-50 text-gray-700 hover:bg-[#FCA5A5] hover:text-white'
+                          ? 'bg-[#F05454] text-white shadow-md scale-105'
+                          : 'bg-gray-50 text-gray-700 hover:bg-[#FCA5A5] hover:text-white hover:scale-105 hover:shadow-sm'
                       }
                     `}
                   >
