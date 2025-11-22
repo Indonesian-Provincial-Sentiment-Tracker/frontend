@@ -42,9 +42,7 @@ function addStateId(gj: GeoJSONType): GeoJSONType {
 
 async function tryLoad(url: string): Promise<GeoJSONType | null> {
   try {
-    const response = await axios.get(url, {
-      headers: { 'Cache-Control': 'no-cache' },
-    });
+    const response = await axios.get(url);
     const gj = response.data;
     const ok = Array.isArray(gj?.features) && gj.features.length > 0 && hasUsableNames(gj);
     return ok ? addStateId(gj as GeoJSONType) : null;

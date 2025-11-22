@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import { useCallback, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import L, { LeafletMouseEvent, Layer } from 'leaflet';
-import type { Feature, GeoJsonProperties, Geometry } from 'geojson';
+import type { Feature, GeoJsonProperties, Geometry, GeoJSON as GeoJSONType } from 'geojson';
 import { normalizeProvinceName, colorForSentimentId } from '../utils/geo';
 import { getProvinceDataById } from '../utils/sentiment';
 import { loadProvincesGeoJSON } from '../services/geojsonService';
@@ -11,12 +11,17 @@ interface SentimentMapProps {
   onProvinceClick: Dispatch<SetStateAction<boolean | string>>;
 }
 
+type ProvinceFeature = Feature<Geometry, GeoJsonProperties & { state_id?: string }>;
+
 export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
-  const { data, isLoading, error } = useQuery({
+  const indonesiaBounds: [[number, number], [number, number]] = [
+    [-11.0076, 95.0054],
+    [6.0769, 141.0194],
+  ];
+  const { data, isLoading, error } = useQuery<GeoJSONType | null, Error>({
     queryKey: ['geoJSON'],
     queryFn: loadProvincesGeoJSON,
     staleTime: 1000 * 60 * 60,
-    retry: 1,
   });
 
   const [hoverInfo, setHoverInfo] = useState<{
@@ -27,8 +32,8 @@ export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
     y: number;
   } | null>(null);
 
-  const styleFn = useCallback((feature?: Feature<Geometry, GeoJsonProperties>) => {
-    const stateId = feature?.properties?.state_id;
+  const styleFn = useCallback((feature?: ProvinceFeature) => {
+    const stateId = feature?.properties?.state_id as string | undefined;
     const provinceData = stateId ? getProvinceDataById(stateId) : undefined;
 
     return {
@@ -40,9 +45,9 @@ export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
   }, []);
 
   const onEachFeature = useCallback(
-    (feature: Feature, layer: Layer) => {
+    (feature: ProvinceFeature, layer: Layer) => {
       layer.on('click', () => {
-        const stateId = feature?.properties?.state_id;
+        const stateId = feature?.properties?.state_id as string | undefined;
         const provinceData = stateId ? getProvinceDataById(stateId) : undefined;
 
         if (provinceData?.state_id) {
@@ -53,7 +58,7 @@ export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
       layer.on('mouseover', (e: LeafletMouseEvent) => {
         (layer as L.Path).setStyle({ weight: 2 });
         const name = normalizeProvinceName(feature?.properties || {});
-        const stateId = feature?.properties?.state_id;
+        const stateId = feature?.properties?.state_id as string | undefined;
         const provinceData = stateId ? getProvinceDataById(stateId) : undefined;
         setHoverInfo({
           name,
@@ -120,9 +125,10 @@ export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
       <MapContainer
         center={center}
         zoom={5}
-        className="w-full h-full"
+        className="w-full h-full max-md:zoom-4"
         scrollWheelZoom={false}
-        dragging={false}
+        maxBounds={indonesiaBounds}
+        maxBoundsViscosity={1.0}
         zoomControl={false}
         doubleClickZoom={false}
         touchZoom={false}
@@ -137,16 +143,18 @@ export default function SentimentMap({ onProvinceClick }: SentimentMapProps) {
       </MapContainer>
       {hoverInfo && (
         <div
-          className="fixed bg-white/95 border border-gray-200 rounded-lg shadow-md px-3 py-2 z-850 text-[13px] pointer-events-none min-w-[150px]"
+          className="fixed bg-white/95 border border-gray-200 rounded-lg shadow-md px-3 py-2 z-850 text-[13px] pointer-events-none min-w-[150px] max-sm:text-[11px] max-sm:px-2 max-sm:py-1.5 max-sm:min-w-[120px]"
           style={{
             left: `${hoverInfo.x + 10}px`,
             top: `${hoverInfo.y + 10}px`,
           }}
         >
           <div>
-            <b>{hoverInfo.name}</b>
+            <b className="max-sm:text-[11px]">{hoverInfo.name}</b>
           </div>
-          <div>Sentimen: {hoverInfo.score != null ? `${hoverInfo.score.toFixed(2)}%` : 'N/A'}</div>
+          <div className="max-sm:text-[10px]">
+            Sentimen: {hoverInfo.score != null ? `${hoverInfo.score.toFixed(2)}%` : 'N/A'}
+          </div>
         </div>
       )}
     </div>

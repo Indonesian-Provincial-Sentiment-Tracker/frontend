@@ -84,7 +84,7 @@ export default function Sidebar({
           onClose();
         }}
       />
-      <div className="fixed top-0 right-0 w-[400px] h-screen bg-white shadow-[-2px_0_8px_rgba(0,0,0,0.15)] z-1000 flex flex-col animate-[slideIn_0.3s_ease-out] max-md:w-full max-md:max-w-[400px]">
+      <div className="fixed top-0 right-0 w-[400px] h-screen bg-white shadow-[-2px_0_8px_rgba(0,0,0,0.15)] z-1000 flex flex-col animate-[slideIn_0.3s_ease-out] max-md:w-full max-md:max-w-[400px] max-sm:w-full max-sm:max-w-full">
         <div className="flex justify-between items-center px-6 py-5 border-b border-gray-200">
           <h2 className="m-0 text-lg font-semibold text-gray-900">
             {provinceInfo?.state_name || 'Detail Provinsi'}
