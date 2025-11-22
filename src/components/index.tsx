@@ -5,6 +5,7 @@ import DateDisplay from './DateDisplay';
 import Sidebar from '../components/Sidebar';
 import ButtomBarTweet from './BottomBarTweet';
 import HeaderLogo from './HeaderLogo';
+import Seo from './Seo';
 
 export {
   HeaderLogo,
@@ -14,4 +15,5 @@ export {
   TopicsList,
   DateDisplay,
   Sidebar,
+  Seo,
 };

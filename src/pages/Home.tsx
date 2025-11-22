@@ -10,7 +10,9 @@ import {
   Sidebar,
   ButtomBarTweet,
   HeaderLogo,
+  Seo,
 } from '../components';
+import seoImage from '../assets/icon.svg';
 
 import { initializeProvinceMap } from '../utils/sentiment';
 import { getHomeService } from '../services/homeService';
@@ -159,6 +161,21 @@ export default function Home() {
 
   return (
     <div className="h-screen w-full relative overflow-hidden">
+      <Seo
+        title="Sentimen Provinsi Indonesia — Peta Interaktif"
+        description="Peta interaktif sentimen masyarakat di tingkat provinsi di Indonesia berdasarkan cuitan. Lihat statistik sentimen, topik populer, dan telusuri provinsi untuk detail."
+        keywords={[
+          'Sentimen',
+          'Indonesia',
+          'Peta Interaktif',
+          'Provinsi',
+          'Statistik Sentimen',
+          'Topik Populer',
+          'Cuitan',
+        ]}
+        url="https://indonesian-state.sentiments.app/"
+        image={seoImage}
+      />
       <HeaderLogo />
       <div className="z-850 bg-white absolute top-18 left-5 w-64 px-4 py-2.5 rounded-md max-md:left-2 max-md:top-18 max-md:w-auto max-md:px-3 max-md:py-2 max-sm:text-xs max-sm:top-14">
         <div className="max-sm:text-[11px]">
