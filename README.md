@@ -121,7 +121,7 @@ frontend/
 │  │  ├─ Tooltip.tsx                 # Komponen tooltip overlay
 │  │  └─ TopicsList.tsx              # Komponen daftar topik/keyword
 │  ├─ constants/
-│  │  └─ sentiment.ts                # Konstanta data sentimen dummy
+│  │  └─ sentiment.ts                # Konstanta data sentimen
 │  ├─ pages/
 │  │  └─ Home.tsx                    # Halaman utama aplikasi
 │  ├─ providers/
