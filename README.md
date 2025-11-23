@@ -106,56 +106,51 @@ npm run preview
 ```
 frontend/
 ├─ public/
-│  ├─ dummy.json                     # Data dummy untuk development
 │  └─ indonesia-provinsi.json        # GeoJSON batas provinsi Indonesia
 ├─ src/
-│  ├─ assets/
-│  │  └─ images/                     # Aset gambar aplikasi
-│  ├─ components/
-│  │  ├─ DateDisplay/
-│  │  │  ├─ DateDisplay.tsx          # Komponen tampilan tanggal
-│  │  │  └─ DateDisplay.module.css
-│  │  ├─ SentimentMap/
-│  │  │  ├─ SentimentMap.tsx         # Komponen peta interaktif + overlay tooltip
-│  │  │  └─ SentimentMap.module.css
-│  │  ├─ SentimentStats/
-│  │  │  ├─ SentimentStats.tsx       # Komponen statistik sentimen
-│  │  │  └─ SentimentStats.module.css
-│  │  ├─ Sidebar/
-│  │  │  ├─ Sidebar.tsx              # Komponen sidebar navigasi
-│  │  │  └─ Sidebar.module.css
-│  │  ├─ TopicsList/
-│  │  │  ├─ TopicsList.tsx           # Komponen daftar topik
-│  │  │  └─ TopicsList.module.css
-│  │  └─ ui/
-│  │     └─ Card/
-│  │        ├─ Card.tsx              # Komponen Card reusable
-│  │        └─ Card.module.css
+│  ├─ assets/                        # Aset gambar dan file media
+│  ├─ components/                    # Komponen UI
+│  │  ├─ BottomBarTweet.tsx          # Komponen bottom bar untuk menampilkan tweet
+│  │  ├─ DateDisplay.tsx             # Komponen tampilan tanggal
+│  │  ├─ HeaderLogo.tsx              # Komponen header dengan logo aplikasi
+│  │  ├─ index.tsx                   # Barrel export untuk komponen
+│  │  ├─ Pagination.tsx              # Komponen navigasi pagination
+│  │  ├─ SentimentMap.tsx            # Komponen peta interaktif choropleth
+│  │  ├─ SentimentStats.tsx          # Komponen statistik sentimen
+│  │  ├─ Sidebar.tsx                 # Komponen sidebar navigasi
+│  │  ├─ Tooltip.tsx                 # Komponen tooltip overlay
+│  │  └─ TopicsList.tsx              # Komponen daftar topik/keyword
 │  ├─ constants/
-│  │  └─ sentiment.ts                # Konstanta data sentimen
-│  ├─ hooks/
-│  │  ├─ useGeoJSON.ts               # Hook memuat data GeoJSON
-│  │  └─ useSentimentData.ts         # Hook memuat data sentimen
+│  │  └─ sentiment.ts                # Konstanta data sentimen dummy
 │  ├─ pages/
-│  │  ├─ Home.tsx                    # Halaman utama aplikasi
-│  │  └─ Home.module.css
+│  │  └─ Home.tsx                    # Halaman utama aplikasi
+│  ├─ providers/
+│  │  └─ QueryProvider.tsx           # Provider untuk TanStack Query
 │  ├─ services/
+│  │  ├─ bottomBarTweetService.ts    # Service untuk data tweet bottom bar
 │  │  ├─ geojsonService.ts           # Service pemuatan GeoJSON + fallback remote
-│  │  └─ sentimentDataService.ts     # Service pemuatan data sentimen
+│  │  ├─ homeService.ts              # Service untuk logika halaman Home
+│  │  ├─ notificationService.ts      # Service untuk notifikasi/toast
+│  │  └─ sidebarService.ts           # Service untuk data sidebar
 │  ├─ types/
-│  │  ├─ css.d.ts                    # Type definition untuk CSS modules
 │  │  └─ sentiment.ts                # Type definition untuk data sentimen
 │  ├─ utils/
+│  │  ├─ date.ts                     # Utilitas formatting tanggal
 │  │  ├─ geo.ts                      # Utilitas GeoJSON & pewarnaan peta
-│  │  └─ sentiment.ts                # Utilitas pengolahan data sentimen
+│  │  ├─ sentiment.ts                # Utilitas pengolahan data sentimen
+│  │  └─ sentimentPercentage.ts      # Utilitas konversi persentase sentimen
 │  ├─ App.tsx                        # Root component aplikasi
 │  ├─ main.tsx                       # Entry point aplikasi
 │  └─ index.css                      # Global styles
+├─ dockerfile                        # Konfigurasi Docker untuk containerization
 ├─ eslint.config.js                  # Konfigurasi ESLint
 ├─ index.html                        # HTML template
+├─ nginx.conf                        # Konfigurasi Nginx untuk deployment
 ├─ package.json                      # Dependensi & scripts
+├─ robots.txt                        # Aturan untuk crawler mesin pencari
+├─ sitemap.xml                       # Sitemap untuk SEO
 ├─ tsconfig.json                     # Konfigurasi TypeScript
-├─ vite.config.ts                    # Konfigurasi Vite
+├─ vite.config.ts                    # Konfigurasi Vite bundler
 └─ README.md                         # Dokumentasi proyek
 ```
 
