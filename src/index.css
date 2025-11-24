@@ -1,15 +1,223 @@
 @import 'leaflet/dist/leaflet.css';
+@import 'tailwindcss';
 
-* {
-  font-family: 'Poppins', sans-serif;
+@theme {
+  --font-family-sans: 'Poppins', system-ui, sans-serif;
 }
 
-html,
-body,
-#root {
-  width: 100%;
-  height: 100%;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translate(0, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .leaflet-container {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+  }
+
+  .leaflet-container {
+    font-size: 10px;
+  }
+
+  .leaflet-container {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .rdp {
+    font-size: 0.85rem;
+  }
+
+  .rdp-button {
+    padding: 0.25rem;
+    min-width: 32px;
+    height: 32px;
+  }
+
+  .rdp-months {
+    width: 100%;
+  }
+
+  .rdp-month {
+    width: 100%;
+  }
+
+  .rdp-day {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .leaflet-container {
+    touch-action: none;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 375px) and (max-width: 640px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 374px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+.rdp {
+  --rdp-accent-color: #f05454;
+  --rdp-background-color: #fee2e2;
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+}
+
+.rdp-day_button {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.rdp-day_button:hover:not([disabled]):not(.rdp-day_selected) {
+  background-color: #fef2f2;
+  border-color: #fca5a5;
+  transform: scale(1.05);
+}
+
+.rdp-day_selected {
+  background-color: #f05454 !important;
+  color: white !important;
+  font-weight: 700;
+  border-color: #f05454 !important;
+  box-shadow: 0 2px 4px rgba(240, 84, 84, 0.3);
+}
+
+.rdp-day_today:not(.rdp-day_selected) {
+  font-weight: 700;
+  color: #f05454;
+  background-color: #fef2f2;
+  border-color: #fca5a5;
+}
+
+.rdp-month_caption {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #111827;
+  text-align: center;
+}
+
+.rdp-weekday {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #374151;
+  text-transform: uppercase;
+  padding: 0.5rem 0;
+}
+
+.rdp-nav_button {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.rdp-nav_button:hover {
+  background-color: #f3f4f6;
+  transform: scale(1.1);
+}
+
+.rdp-chevron {
+  fill: #374151;
+}
+
+.rdp-day_button[disabled] {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.rdp-day_button[disabled]:hover {
+  background-color: transparent;
+  transform: none;
+}
+
+.rdp-day_outside {
+  opacity: 0.4;
+}
+
+.date-picker-weekly .rdp-day_button {
+  position: relative;
+}
+
+.rdp-month_grid {
+  width: 100%;
+  border-spacing: 0.25rem;
+}
+
+@media (min-width: 641px) {
+  .rdp {
+    font-size: 1rem;
+  }
+
+  .rdp-day_button {
+    min-width: 42px;
+    height: 42px;
+  }
+
+  .rdp-month_caption {
+    font-size: 1.125rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .rdp-weekday {
+    font-size: 0.875rem;
+    padding: 0.75rem 0;
+  }
 }

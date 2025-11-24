@@ -1,5 +1,4 @@
 import { Suspense, lazy } from 'react';
-
 const Home = lazy(() => import('./pages/Home'));
 
 export default function App() {
@@ -9,4 +8,3 @@ export default function App() {
     </Suspense>
   );
 }
-
